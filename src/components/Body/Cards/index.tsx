@@ -25,9 +25,9 @@ const Cards: FC = () => {
     <Wrapper>
       <Header />
       <CardsWrapper>
-        <Card title='Requests from company employees' icon={EApplicationIcon} />
-        <Card title='Requests from the technical department for work and incidents' icon={EApplication2Icon} />
-        <Card title='Customers complaints' icon={EApplication3Icon} />
+        <Card title='Requests from company employees' icon={EApplicationIcon} href='' />
+        <Card title='Requests from the technical department for work and incidents' icon={EApplication2Icon} href='' />
+        <Card title='Customers complaints' icon={EApplication3Icon} href='/customers-complaints' />
       </CardsWrapper>
     </Wrapper>
   );

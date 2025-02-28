@@ -1,4 +1,5 @@
 import { FC, SVGProps } from 'react';
+import { Link } from 'react-router';
 import styled from 'styled-components';
 
 import Button from '@/components/ui/Button';
@@ -8,6 +9,7 @@ import PlusIcon from '@icons/plus.svg?react';
 interface Props {
   title: string;
   icon: FC<SVGProps<SVGSVGElement>>;
+  href: string;
 }
 
 const Wrapper = styled.div`
@@ -39,7 +41,7 @@ const Title = styled.div`
   background-color: #e9e9e9;
 `;
 
-const StyledButton = styled(Button)`
+const StyledLink = styled(Link)`
   margin: 0 auto 20px auto;
   padding: 10px 20px;
 
@@ -50,6 +52,7 @@ const StyledButton = styled(Button)`
 
   font-size: 14px;
   font-weight: 600;
+  text-decoration: none;
 
   color: #fff;
   background-color: #000000;
@@ -62,15 +65,15 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const Card: FC<Props> = ({ title, icon: Icon }) => {
+const Card: FC<Props> = ({ title, icon: Icon, href }) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
       <Icon width={72} height={72} />
-      <StyledButton type='button'>
+      <StyledLink to={href}>
         <PlusIcon />
         New request
-      </StyledButton>
+      </StyledLink>
     </Wrapper>
   );
 };

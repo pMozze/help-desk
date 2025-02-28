@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Sidebar from './components/Sidebar';
-import Body from './components/Body';
+import Sidebar from '@/components/Sidebar';
+import Body from '@/components/Body';
 
 const Wrapper = styled.div`
   @font-face {
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const App: FC = () => {
+const Home: FC = () => {
   return (
     <Wrapper>
       <Sidebar />
@@ -47,4 +47,4 @@ const App: FC = () => {
   );
 };
 
-export default App;
+export default Home;
