@@ -2,8 +2,6 @@ import { FC, SVGProps } from 'react';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 
-import Button from '@/components/ui/Button';
-
 import PlusIcon from '@icons/plus.svg?react';
 
 interface Props {
