@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Button from '@/components/ui/Button';
+import DefaultButton from '@/components/ui/DefaultButton';
 
 import ChevronLeftIcon from '@icons/chevron-left.svg?react';
 import ChevronRightIcon from '@icons/chevron-right.svg?react';
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(DefaultButton)`
   display: flex;
   align-items: center;
   justify-content: center;

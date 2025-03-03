@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Input from '@/components/ui/Input';
+import DefaultInput from '@/components/ui/DefaultInput';
 
 import SearchIcon from '@icons/search.svg?react';
 
@@ -17,7 +17,7 @@ const Wrapper = styled.label`
   border-bottom: 1px solid #e9e9e9;
 `;
 
-const StyledInput = styled(Input)`
+const StyledInput = styled(DefaultInput)`
   flex-grow: 1;
   font-size: 14px;
   color: #717a81;

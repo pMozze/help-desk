@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Button from '../ui/Button';
+import DefaultButton from '../ui/DefaultButton';
 import Search from './Search';
 
 import CalendarIcon from '@icons/calendar.svg?react';
@@ -25,7 +25,7 @@ const Row = styled.div`
   margin-top: 20px;
 `;
 
-const CalendarButton = styled(Button)`
+const CalendarButton = styled(DefaultButton)`
   display: flex;
   align-items: center;
   justify-content: center;

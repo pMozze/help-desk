@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Button from './Button';
+import DefaultButton from './DefaultButton';
 
 import ChevronLeftIcon from '@icons/chevron-left.svg?react';
 import ChevronRightIcon from '@icons/chevron-right.svg?react';
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-const PaginationButton = styled(Button)`
+const PaginationButton = styled(DefaultButton)`
   display: flex;
   align-items: center;
   column-gap: 5px;
@@ -34,7 +34,7 @@ const ItemsWrapper = styled.div`
   column-gap: 5px;
 `;
 
-const Item = styled(Button)`
+const Item = styled(DefaultButton)`
   font-size: 14px;
   font-weight: ${({ disabled }) => (disabled ? '400' : '500')};
 

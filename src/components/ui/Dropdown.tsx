@@ -1,7 +1,7 @@
 import { FC, useState, useCallback, SVGProps } from 'react';
 import styled from 'styled-components';
 
-import Button from './Button';
+import DefaultButton from './DefaultButton';
 
 import ChevronDownIcon from '@icons/chevron-down.svg?react';
 
@@ -28,7 +28,7 @@ const DropdownWrapper = styled.div`
   position: relative;
 `;
 
-const DropdownButton = styled(Button)<{ $isActive: boolean }>`
+const DropdownButton = styled(DefaultButton)<{ $isActive: boolean }>`
   padding: 4px 12px;
   min-width: 115px;
 
@@ -64,7 +64,7 @@ const DropdownMenu = styled.div`
   translate: 0 calc(100% + 10px);
 `;
 
-const DropdownItem = styled(Button)`
+const DropdownItem = styled(DefaultButton)`
   padding-block: 10px;
   width: 100%;
 

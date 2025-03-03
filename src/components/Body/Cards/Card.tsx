@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   border-radius: 20px;
 
   background-color: #fff;
+  container-type: inline-size;
 
   > svg {
     margin: 30px auto 30px auto;
@@ -32,7 +33,7 @@ const Title = styled.div`
   align-items: center;
   justify-content: center;
 
-  font-size: 18px;
+  font-size: clamp(14px, 5.3cqw, 18px);
   font-weight: 500;
   text-align: center;
 

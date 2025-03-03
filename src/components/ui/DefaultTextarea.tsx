@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-const Input = styled.input`
+const DefaultTextarea = styled.textarea`
   padding: 0;
+  min-height: 1lh;
 
   display: block;
   width: fit-content;
@@ -13,6 +14,8 @@ const Input = styled.input`
 
   border: none;
   outline: none;
+
+  resize: vertical;
 `;
 
-export default Input;
+export default DefaultTextarea;

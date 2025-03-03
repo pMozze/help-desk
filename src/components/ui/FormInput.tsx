@@ -1,10 +1,10 @@
-import { forwardRef, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, ComponentPropsWithoutRef, FC, SVGProps } from 'react';
 import styled from 'styled-components';
 
-import { default as DefaultInput } from '@/components/ui/Input';
+import DefaultInput from '@/components/ui/DefaultInput';
 
 interface Props extends ComponentPropsWithoutRef<'input'> {
-  label?: string;
+  icon?: FC<SVGProps<SVGSVGElement>>;
 }
 
 const StyledDefaultInput = styled(DefaultInput)`
@@ -19,17 +19,25 @@ const StyledDefaultInput = styled(DefaultInput)`
 `;
 
 const Wrapper = styled.label`
+  position: relative;
   padding: 20px 15px;
 
   display: flex;
-  position: relative;
+  align-items: center;
+  column-gap: 15px;
 
   border-radius: 8px;
   background-color: #fff;
 
-  input:placeholder-shown + span {
+  height: fit-content;
+
+  > input:placeholder-shown + span {
     font-size: 14px;
     translate: 0 -50%;
+  }
+
+  > svg {
+    flex-shrink: 0;
   }
 `;
 
@@ -45,15 +53,16 @@ const Placeholder = styled.span`
   color: #868686;
 `;
 
-const Input = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { placeholder } = props;
+const FormInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { icon: Icon, placeholder } = props;
 
   return (
     <Wrapper>
-      <StyledDefaultInput ref={ref} type='text' {...props} />
+      <StyledDefaultInput ref={ref} {...props} />
       {placeholder && <Placeholder>{placeholder}</Placeholder>}
+      {Icon && <Icon width={16} height={16} />}
     </Wrapper>
   );
 });
 
-export default Input;
+export default FormInput;

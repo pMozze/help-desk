@@ -1,8 +1,8 @@
 import { FC, useRef } from 'react';
 import styled from 'styled-components';
 
-import Input from '../ui/Input';
-import Button from '../ui/Button';
+import DefaultInput from '../ui/DefaultInput';
+import DefaultButton from '../ui/DefaultButton';
 
 import SearchIcon from '@icons/search.svg?react';
 import CrossIcon from '@icons/cross.svg?react';
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   background-color: #fff;
 `;
 
-const SearchInput = styled(Input)`
+const SearchInput = styled(DefaultInput)`
   flex-grow: 1;
   height: 100%;
   font-size: 14px;
@@ -34,7 +34,7 @@ const SearchInput = styled(Input)`
   }
 `;
 
-const ResetButton = styled(Button)`
+const ResetButton = styled(DefaultButton)`
   display: none;
 `;
 
