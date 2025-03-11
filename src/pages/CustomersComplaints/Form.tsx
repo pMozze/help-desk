@@ -5,6 +5,7 @@ import FormSection from './FormSection';
 import FormInput from '@/components/ui/FormInput';
 import FormTextarea from '@/components/ui/FormTextarea';
 import FormSelect from '@/components/ui/FormSelect';
+import Input from '@/components/ui/Input';
 
 import CalendarIcon from '@icons/calendar.svg?react';
 import ClockIcon from '@icons/clock.svg?react';
@@ -31,10 +32,11 @@ const Form: FC = () => {
     <>
       <Wrapper>
         <FormSection title='Applicant information'>
+          <Input />
           <FormInput type='text' placeholder='User name' />
           <FormTextarea rows={3} placeholder='Contact Information, position, or department' />
         </FormSection>
-        <FormSection title='Event data'>
+        {/* <FormSection title='Event data'>
           <FormInput type='text' placeholder='Event date' icon={CalendarIcon} />
           <FormInput type='text' placeholder='Event time' icon={ClockIcon} />
           <FormInput type='text' placeholder='User identification (ID or Email)' />
@@ -109,7 +111,7 @@ const Form: FC = () => {
             ]}
             placeholder='Preferred contact channel'
           />
-        </FormSection>
+        </FormSection> */}
       </Wrapper>
       <ButtonsRow>
         <Button type='button' $type='tertiary' $size='large'>
