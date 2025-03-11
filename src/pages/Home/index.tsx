@@ -1,14 +1,16 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import TableWrapper from './Table';
 import Cards from './Cards';
+import TableWrapper from './Table';
 
 const Wrapper = styled.div`
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
 `;
 
-const Body: FC = () => {
+const Home: FC = () => {
   return (
     <Wrapper>
       <Cards />
@@ -17,4 +19,4 @@ const Body: FC = () => {
   );
 };
 
-export default Body;
+export default Home;

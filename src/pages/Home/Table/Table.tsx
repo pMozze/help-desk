@@ -8,7 +8,6 @@ import SortIcon from '@icons/sort.svg?react';
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
 `;
 
 const StyledTh = styled.th`

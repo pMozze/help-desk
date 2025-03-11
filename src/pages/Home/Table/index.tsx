@@ -6,7 +6,8 @@ import Table from './Table';
 import Footer from './Footer';
 
 const StyledTableWrapper = styled.div`
-  margin-top: 30px;
+  border-radius: 20px;
+  background-color: #fff;
 `;
 
 const TableWrapper: FC = () => {

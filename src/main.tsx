@@ -2,11 +2,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router';
 
-import Layout from './Layout';
+import Layout from './pages/Layout';
 import Home from './pages/Home';
 import CustomersComplaints from './pages/CustomersComplaints';
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('support-desk')!).render(
   <StrictMode>
     <HashRouter>
       <Routes>

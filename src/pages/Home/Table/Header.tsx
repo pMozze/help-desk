@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Dropdown from '@/components/ui/Dropdown';
 
 const Title = styled.div`
+  padding: 25px 20px 0 20px;
   font-size: 28px;
   font-weight: 500;
 `;
@@ -15,11 +16,7 @@ const Wrapper = styled.div`
   display: flex;
   column-gap: 30px;
 
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   border-bottom: 1px solid #868686;
-
-  background-color: #fff;
 `;
 
 const Header: FC = () => {

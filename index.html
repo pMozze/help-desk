@@ -3,9 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @font-face {
+        font-family: 'SF Pro Display';
+        font-weight: 400;
+        src: url('/fonts/SFProDisplay/dehinted-SFProDisplay-Regular.woff2') format('woff');
+      }
+
+      @font-face {
+        font-family: 'SF Pro Display';
+        font-weight: 500;
+        src: url('/fonts/SFProDisplay/dehinted-SFProDisplay-Medium.woff2') format('woff');
+      }
+
+      @font-face {
+        font-family: 'SF Pro Display';
+        font-weight: 600;
+        src: url('/fonts/SFProDisplay/dehinted-SFProDisplay-Semibold.woff2') format('woff');
+      }
+
+      body {
+        background-color: #f8f8f8;
+      }
+    </style>
   </head>
-  <body style="background-color: #f8f8f8">
-    <div id="root"></div>
+  <body>
+    <div id="support-desk"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

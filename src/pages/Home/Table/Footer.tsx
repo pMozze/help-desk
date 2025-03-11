@@ -10,10 +10,6 @@ const Wrapper = styled.div`
   align-items: center;
 
   position: relative;
-  background-color: #fff;
-
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
 
   &::before {
     position: absolute;
