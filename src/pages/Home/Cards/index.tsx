@@ -8,9 +8,13 @@ import EApplication2Icon from '@icons/e-application-2.svg?react';
 import EApplication3Icon from '@icons/e-application-3.svg?react';
 
 const CardsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  > * {
+    flex-basis: 300px;
+  }
 `;
 
 const Cards: FC = () => {

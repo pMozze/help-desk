@@ -1,7 +1,6 @@
-import { forwardRef, ComponentPropsWithoutRef, useState, useCallback } from 'react';
+import { forwardRef, ComponentPropsWithoutRef, useState, useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import DefaultButton from './DefaultButton';
 import ChevronDownIcon from '@icons/chevron-down.svg?react';
 
 type Option = {
@@ -19,30 +18,32 @@ const Wrapper = styled.div`
   height: fit-content;
 `;
 
-const Button = styled(DefaultButton)`
-  padding: 10px 10px 10px 20px;
+const Button = styled.button`
+  && {
+    padding: 10px 10px 10px 20px;
 
-  display: flex;
-  align-items: center;
-  column-gap: 15px;
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
 
-  font-size: 14px;
-  line-height: 16px;
+    font-size: 14px;
+    line-height: 16px;
 
-  border-radius: 8px;
-  border: 1px solid #dadada;
+    border-radius: 8px;
+    border: 1px solid #dadada;
 
-  color: #000;
-  background-color: #fff;
+    color: #000;
+    background-color: #fff;
 
-  width: 100%;
+    width: 100%;
 
-  cursor: pointer;
-  user-select: none;
+    cursor: pointer;
+    user-select: none;
 
-  > svg {
-    flex-shrink: 0;
-    color: #dadada;
+    > svg {
+      flex-shrink: 0;
+      color: #dadada;
+    }
   }
 `;
 
@@ -71,19 +72,21 @@ const OptionsList = styled.div`
   background-color: #fff;
 `;
 
-const OptionItem = styled(DefaultButton)`
-  width: 100%;
-  padding: 5px 20px;
+const OptionItem = styled.button`
+  && {
+    width: 100%;
+    padding: 5px 20px;
 
-  font-size: 14px;
-  line-height: 16px;
+    font-size: 14px;
+    line-height: 16px;
 
-  &:first-child {
-    padding-top: 0;
-  }
+    &:first-child {
+      padding-top: 0;
+    }
 
-  &:last-child {
-    padding-bottom: 0;
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
 `;
 
@@ -92,6 +95,27 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClickHandler = (event: MouseEvent) => {
+      if (!event.composedPath().includes(wrapperRef.current!)) {
+        setIsOpen(false);
+      }
+    };
+
+    const onScrollHandler = () => {
+      setIsOpen(false);
+    };
+
+    document.addEventListener('click', onClickHandler);
+    document.addEventListener('scroll', onScrollHandler);
+
+    return () => {
+      document.removeEventListener('click', onClickHandler);
+      document.removeEventListener('scroll', onScrollHandler);
+    };
+  }, []);
 
   const onSelect = useCallback((option: Option) => {
     setSelectedOption(option);
@@ -99,7 +123,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
   }, []);
 
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       <Button type='button' onClick={() => setIsOpen(!isOpen)}>
         <SelectedOption>{selectedOption?.name}</SelectedOption>
         <ChevronDownIcon width={16} height={16} />

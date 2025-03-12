@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import Dropdown from '@/components/ui/Dropdown';
+import Dropdown from '@/components/Dropdown';
 
 const Title = styled.div`
   padding: 25px 20px 0 20px;

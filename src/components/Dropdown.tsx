@@ -1,7 +1,5 @@
-import { FC, useState, useCallback, SVGProps } from 'react';
+import { FC, useState, useCallback, SVGProps, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-
-import DefaultButton from './DefaultButton';
 
 import ChevronDownIcon from '@icons/chevron-down.svg?react';
 
@@ -28,24 +26,26 @@ const DropdownWrapper = styled.div`
   position: relative;
 `;
 
-const DropdownButton = styled(DefaultButton)<{ $isActive: boolean }>`
-  padding: 4px 12px;
-  min-width: 115px;
+const DropdownButton = styled.button<{ $isActive: boolean }>`
+  && {
+    padding: 4px 12px;
+    min-width: 115px;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  background-color: #f3f3f3;
-  border-radius: 9999px;
+    background-color: #f3f3f3;
+    border-radius: 9999px;
 
-  ${({ $isActive }) =>
-    $isActive &&
-    `
+    ${({ $isActive }) =>
+      $isActive &&
+      `
     > svg {
       rotate: 180deg;
     }
   `}
+  }
 `;
 
 const DropdownMenu = styled.div`
@@ -64,20 +64,22 @@ const DropdownMenu = styled.div`
   translate: 0 calc(100% + 10px);
 `;
 
-const DropdownItem = styled(DefaultButton)`
-  padding-block: 10px;
-  width: 100%;
+const DropdownItem = styled.button`
+  && {
+    padding-block: 10px;
+    width: 100%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  column-gap: 10px;
-  font-size: 14px;
-  line-height: 1;
+    column-gap: 10px;
+    font-size: 14px;
+    line-height: 1;
 
-  &:hover {
-    background-color: #f5fcf7;
+    &:hover {
+      background-color: #f5fcf7;
+    }
   }
 `;
 
@@ -88,6 +90,27 @@ const Label = styled.span`
 const Dropdown: FC<Props> = ({ label, items, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const dropdownWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClickHandler = (event: MouseEvent) => {
+      if (!event.composedPath().includes(dropdownWrapperRef.current!)) {
+        setIsOpen(false);
+      }
+    };
+
+    const onScrollHandler = () => {
+      setIsOpen(false);
+    };
+
+    document.addEventListener('click', onClickHandler);
+    document.addEventListener('scroll', onScrollHandler);
+
+    return () => {
+      document.removeEventListener('click', onClickHandler);
+      document.removeEventListener('scroll', onScrollHandler);
+    };
+  }, []);
 
   const onItemSelect = useCallback((item: Item) => {
     setSelectedItem(item);
@@ -98,7 +121,7 @@ const Dropdown: FC<Props> = ({ label, items, onSelect }) => {
   return (
     <Wrapper>
       {label && <Label>{label}</Label>}
-      <DropdownWrapper>
+      <DropdownWrapper ref={dropdownWrapperRef}>
         <DropdownButton type='button' onClick={() => setIsOpen(value => !value)} $isActive={isOpen}>
           {selectedItem ? selectedItem.name : items[0].name}
           <ChevronDownIcon />

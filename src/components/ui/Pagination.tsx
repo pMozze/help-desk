@@ -1,8 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import DefaultButton from './DefaultButton';
-
 import ChevronLeftIcon from '@icons/chevron-left.svg?react';
 import ChevronRightIcon from '@icons/chevron-right.svg?react';
 
@@ -18,15 +16,17 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-const PaginationButton = styled(DefaultButton)`
-  display: flex;
-  align-items: center;
-  column-gap: 5px;
+const PaginationButton = styled.button`
+  && {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
 
-  font-size: 14px;
-  font-weight: ${({ disabled }) => (disabled ? '400' : '500')};
+    font-size: 14px;
+    font-weight: ${({ disabled }) => (disabled ? '400' : '500')};
 
-  ${({ disabled }) => disabled && 'color: #717A81'};
+    ${({ disabled }) => disabled && 'color: #717A81'};
+  }
 `;
 
 const ItemsWrapper = styled.div`
@@ -34,11 +34,13 @@ const ItemsWrapper = styled.div`
   column-gap: 5px;
 `;
 
-const Item = styled(DefaultButton)`
-  font-size: 14px;
-  font-weight: ${({ disabled }) => (disabled ? '400' : '500')};
+const Item = styled.button`
+  && {
+    font-size: 14px;
+    font-weight: ${({ disabled }) => (disabled ? '400' : '500')};
 
-  ${({ disabled }) => disabled && 'color: #717A81'};
+    ${({ disabled }) => disabled && 'color: #717A81'};
+  }
 `;
 
 const Pagination: FC<Props> = ({ className }) => {

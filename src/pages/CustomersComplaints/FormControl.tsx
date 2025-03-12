@@ -9,9 +9,7 @@ interface Props {
 const Wrapper = styled.label`
   display: flex;
   align-items: center;
-
   column-gap: 45px;
-  width: fit-content;
 `;
 
 const Title = styled.div`
