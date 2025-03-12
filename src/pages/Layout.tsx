@@ -13,6 +13,21 @@ const Wrapper = styled.div`
   * {
     box-sizing: border-box;
   }
+
+  input {
+    padding: 0;
+
+    display: block;
+    width: fit-content;
+
+    font: inherit;
+
+    color: inherit;
+    background-color: transparent;
+
+    border: none;
+    outline: none;
+  }
 `;
 
 const Layout: FC = () => {

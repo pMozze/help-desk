@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, Children } from 'react';
 import styled from 'styled-components';
 
 interface Props extends PropsWithChildren {
@@ -15,19 +15,32 @@ const Content = styled.div`
   padding: 15px;
   margin-top: 15px;
 
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 25px 40px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
 
   border-radius: 12px;
   background-color: #f8f9fa;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #c6cdd3;
 `;
 
 const FormSection: FC<Props> = ({ title, children }) => {
   return (
     <div>
       <Title>{title}</Title>
-      <Content>{children}</Content>
+      <Content>
+        {Children.map(children, (child, childIndex) => (
+          <>
+            {child}
+            {childIndex < Children.count(children) - 1 && <Divider />}
+          </>
+        ))}
+      </Content>
     </div>
   );
 };
