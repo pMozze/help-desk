@@ -48,8 +48,7 @@ const Form: FC = () => {
       onShow: self => {
         const inputWrapperRect = self.context.inputElement!.parentElement!.getBoundingClientRect();
         self.context.mainElement.style.top = inputWrapperRect.top + scrollY + inputWrapperRect.height + 'px';
-        self.context.mainElement.style.left =
-          inputWrapperRect.left + (inputWrapperRect.left + scrollY) / 2 - inputWrapperRect.width / 2 + 'px';
+        self.context.mainElement.style.left = inputWrapperRect.left + scrollX + 'px';
       },
       onClickDate: self => {
         const date = getDate(self.context.selectedDates[0]);

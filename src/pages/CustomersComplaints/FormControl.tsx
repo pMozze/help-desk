@@ -8,15 +8,20 @@ interface Props {
 
 const Wrapper = styled.label`
   display: flex;
-  align-items: center;
   column-gap: 45px;
 `;
 
 const Title = styled.div`
+  min-height: 38px;
+  height: fit-content;
+
+  align-content: center;
+
   flex-shrink: 0;
   flex-basis: 145px;
 
   font-size: 14px;
+  line-height: 1.35;
   text-wrap: balance;
 
   color: #717a81;

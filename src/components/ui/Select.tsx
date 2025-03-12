@@ -65,6 +65,10 @@ const OptionsList = styled.div`
   bottom: 0;
   right: 0;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+
   width: 100%;
   translate: 0 calc(100% + 2px);
 
@@ -72,21 +76,20 @@ const OptionsList = styled.div`
   background-color: #fff;
 `;
 
-const OptionItem = styled.button`
+const OptionItem = styled.button<{ $isActive: boolean }>`
   && {
     width: 100%;
-    padding: 5px 20px;
+    padding-inline: 20px;
 
     font-size: 14px;
     line-height: 16px;
 
-    &:first-child {
-      padding-top: 0;
-    }
-
-    &:last-child {
-      padding-bottom: 0;
-    }
+    ${({ $isActive }) =>
+      $isActive &&
+      `
+      color: #fff;
+      background-color: #1C90FF;
+    `}
   }
 `;
 
@@ -137,6 +140,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
                 onSelect(option);
                 event.preventDefault();
               }}
+              $isActive={selectedOption === option}
             >
               {option.name}
             </OptionItem>
