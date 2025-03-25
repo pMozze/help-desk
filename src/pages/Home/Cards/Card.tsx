@@ -21,6 +21,14 @@ const Wrapper = styled(Link)`
 
   color: inherit;
   background-color: #fff;
+
+  transition: box-shadow 250ms ease;
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0px 2px 10px 0px #171a1f4d;
+  }
 `;
 
 const Title = styled.div`
