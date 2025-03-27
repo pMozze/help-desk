@@ -18,7 +18,7 @@ const InputStyles = css`
     color: #000;
     background-color: #fff;
 
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #dadada;
 
     &::placeholder {

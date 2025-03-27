@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-type Type = 'primary' | 'ghost';
+type Type = 'primary' | 'ghost' | 'black' | 'bordered';
 
 const Button = styled.button<{ $type: Type }>`
   && {
@@ -24,6 +24,19 @@ const Button = styled.button<{ $type: Type }>`
           return `
           color: #000;
           background-color: #fff;
+        `;
+
+        case 'black':
+          return `
+          color: #fff;
+          background-color: #000;
+        `;
+
+        case 'bordered':
+          return `
+          color: #000;
+          border: 1px solid #000;
+          background-color: transparent;
         `;
       }
     }}

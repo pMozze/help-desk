@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, Children } from 'react';
 import styled from 'styled-components';
 
 interface Props extends PropsWithChildren {
-  title: string;
+  title?: string;
 }
 
 const Title = styled.div`
@@ -32,7 +32,7 @@ const Divider = styled.div`
 const FormSection: FC<Props> = ({ title, children }) => {
   return (
     <div>
-      <Title>{title}</Title>
+      {title && <Title>{title}</Title>}
       <Content>
         {Children.map(children, (child, childIndex) => (
           <>

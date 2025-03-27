@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import Badge from '@/components/ui/Badge';
@@ -40,6 +41,8 @@ const StyledTd = styled.td<{ $variant: 'default' | 'bold' }>`
 `;
 
 const Table: FC = () => {
+  const navigate = useNavigate();
+
   return (
     <StyledTable>
       <thead>
@@ -75,7 +78,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Submitted' variant='warning' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>19 Dec, 2020</StyledTd>
@@ -84,7 +89,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Submitted' variant='warning' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>15 Dec, 2020</StyledTd>
@@ -93,7 +100,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Rejected by Supervisor' variant='danger' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>18 Dec, 2020</StyledTd>
@@ -102,7 +111,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
@@ -111,7 +122,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
@@ -120,7 +133,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
@@ -129,7 +144,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
@@ -138,7 +155,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
         <tr>
           <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
@@ -147,7 +166,9 @@ const Table: FC = () => {
           <StyledTd $variant='default'>
             <Badge text='Revoked' variant='success' />
           </StyledTd>
-          <StyledTd $variant='default'>...</StyledTd>
+          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
+            ...
+          </StyledTd>
         </tr>
       </tbody>
     </StyledTable>

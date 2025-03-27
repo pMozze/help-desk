@@ -1,6 +1,8 @@
 import { FC } from 'react';
+import { useSearchParams } from 'react-router';
 import styled from 'styled-components';
 
+import Header from './Header';
 import Form from './Form';
 
 const Page = styled.div`
@@ -8,9 +10,16 @@ const Page = styled.div`
   background-color: #fff;
 `;
 
+const StyledHeader = styled(Header)`
+  margin-bottom: 15px;
+`;
+
 const CustomersComplaints: FC = () => {
+  const [searchParams] = useSearchParams();
+
   return (
     <Page>
+      {searchParams.has('view') && <StyledHeader />}
       <Form />
     </Page>
   );

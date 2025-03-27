@@ -29,7 +29,7 @@ const Button = styled.button`
     font-size: 14px;
     line-height: 16px;
 
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #dadada;
 
     color: #000;
@@ -72,7 +72,7 @@ const OptionsList = styled.div`
   width: 100%;
   translate: 0 calc(100% + 2px);
 
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: #fff;
 `;
 

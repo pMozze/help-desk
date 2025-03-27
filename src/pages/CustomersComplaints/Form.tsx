@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import styled from 'styled-components';
 import { format as formatDate } from 'date-fns';
 
@@ -13,7 +13,9 @@ import Input from '@/components/ui/Input';
 import MaskedInput from '@/components/MaskedInput';
 import Select from '@/components/ui/Select';
 import TextArea from '@/components/ui/TextArea';
+import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
 
 import CalendarIcon from '@icons/calendar.svg?react';
 
@@ -33,6 +35,7 @@ const Buttons = styled.div`
 `;
 
 const Form: FC = () => {
+  const [searchParams] = useSearchParams();
   const eventDateCalendarRef = useRef<Calendar | null>(null);
   const eventDateInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -149,38 +152,75 @@ const Form: FC = () => {
         <FormControl title='Impact on work' control={<StyledTextArea rows={6} />} />
         <FormControl title='Impact on work' control={<StyledTextArea rows={6} />} />
       </FormSection>
-      <FormSection title='Expected support outcome'>
-        <FormControl
-          title='Expected resolution'
-          control={
-            <Select
-              options={[
-                { name: 'Group 1', value: 'group1' },
-                { name: 'Group 2', value: 'group2' }
-              ]}
-            />
-          }
-        />
-        <FormControl
-          title='Preferred contact channel'
-          control={
-            <Select
-              options={[
-                { name: 'Group 1', value: 'group1' },
-                { name: 'Group 2', value: 'group2' }
-              ]}
-            />
-          }
-        />
-      </FormSection>
-      <Buttons>
-        <Button type='submit' $type='primary'>
-          Send
-        </Button>
-        <Button type='button' $type='ghost' onClick={() => navigate('/')}>
-          Cancel
-        </Button>
-      </Buttons>
+      <FileUploader
+        subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
+        multiple
+        accept='.png,.jpg,.jpeg,.pdf'
+      />
+      {searchParams.has('view') || searchParams.has('edit') ? (
+        <FormSection>
+          <FormControl title='Priority' control={<Input type='text' />} />
+          <FormControl
+            title='Answer rating'
+            control={
+              <Select
+                options={[
+                  { name: 'Group 1', value: 'group1' },
+                  { name: 'Group 2', value: 'group2' }
+                ]}
+              />
+            }
+          />
+          <FormControl title='Close ticket' control={<Checkbox type='checkbox' />} />
+        </FormSection>
+      ) : (
+        <FormSection title='Expected support outcome'>
+          <FormControl
+            title='Expected resolution'
+            control={
+              <Select
+                options={[
+                  { name: 'Group 1', value: 'group1' },
+                  { name: 'Group 2', value: 'group2' }
+                ]}
+              />
+            }
+          />
+          <FormControl
+            title='Preferred contact channel'
+            control={
+              <Select
+                options={[
+                  { name: 'Group 1', value: 'group1' },
+                  { name: 'Group 2', value: 'group2' }
+                ]}
+              />
+            }
+          />
+        </FormSection>
+      )}
+      {searchParams.has('view') || searchParams.has('edit') ? (
+        <Buttons>
+          <Button type='submit' $type='primary'>
+            Save
+          </Button>
+          <Button type='submit' $type='black'>
+            Apply
+          </Button>
+          <Button type='button' $type='bordered'>
+            Reset
+          </Button>
+        </Buttons>
+      ) : (
+        <Buttons>
+          <Button type='submit' $type='primary'>
+            Send
+          </Button>
+          <Button type='button' $type='ghost' onClick={() => navigate('/')}>
+            Cancel
+          </Button>
+        </Buttons>
+      )}
     </Wrapper>
   );
 };
