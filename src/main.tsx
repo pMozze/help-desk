@@ -14,7 +14,7 @@ createRoot(document.getElementById('support-desk')!).render(
       <Routes>
         <Route Component={Layout}>
           <Route index path='/' Component={Home} />
-          <Route path='/employees-requests' Component={EmployeesRequests} />
+          <Route path='/ticket/:id' Component={EmployeesRequests} />
           <Route path='/department-requests' Component={DepartmentRequests} />
           <Route path='/customers-complaints' Component={CustomersComplaints} />
         </Route>

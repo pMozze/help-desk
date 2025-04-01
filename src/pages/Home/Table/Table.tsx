@@ -1,17 +1,33 @@
-import { FC } from 'react';
-import { useNavigate } from 'react-router';
+import { FC, useMemo } from 'react';
 import styled from 'styled-components';
+import { format as formatDate, fromUnixTime as dateFromUnixTime } from 'date-fns';
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortDirection,
+  useReactTable
+} from '@tanstack/react-table';
+
+import { TicketsItem } from '@/api/models';
+import { useTableFiltersStore } from './TableFiltersStore';
 
 import Badge from '@/components/ui/Badge';
+import TicketItemMenu from './TicketItemMenu';
 
 import SortIcon from '@icons/sort.svg?react';
+
+interface Props {
+  items: TicketsItem[];
+}
 
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 `;
 
-const StyledTh = styled.th`
+const StyledTh = styled.th<{ $canBeSorted?: boolean }>`
   padding: 15px 20px;
   font-weight: 500;
   text-align: left;
@@ -26,6 +42,13 @@ const StyledTh = styled.th`
       user-select: none;
     }
   }
+
+  ${({ $canBeSorted }) =>
+    $canBeSorted &&
+    `
+    cursor: pointer;
+    user-select: none;
+  `}
 `;
 
 const StyledTd = styled.td<{ $variant: 'default' | 'bold' }>`
@@ -40,136 +63,111 @@ const StyledTd = styled.td<{ $variant: 'default' | 'bold' }>`
   `}
 `;
 
-const Table: FC = () => {
-  const navigate = useNavigate();
+const StyledSortIcon = styled(SortIcon)<{ $direction: false | SortDirection }>`
+  ${({ $direction }) => {
+    switch ($direction) {
+      case 'asc':
+        return `> path:nth-child(2) {
+          display: none;
+        }`;
+
+      case 'desc':
+        return `> path:nth-child(1) {
+          display: none;
+        }`;
+
+      default:
+        break;
+    }
+  }}
+`;
+
+const columnHelper = createColumnHelper<TicketsItem>();
+
+const columns = [
+  columnHelper.accessor('lastModifiedAt', {
+    header: 'Modified',
+    cell: cellContext => formatDate(dateFromUnixTime(cellContext.getValue()), 'dd MMM, yyyy')
+  }),
+  columnHelper.accessor('type', {
+    header: 'Type of Request',
+    cell: cellContext => cellContext.getValue()
+  }),
+  columnHelper.accessor('title', {
+    header: 'Title',
+    cell: cellContext => cellContext.getValue()
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: cellContext => {
+      switch (cellContext.getValue()) {
+        case 'CREATED':
+          return <Badge text='Created' variant='danger' />;
+
+        case 'IN_PROGRESS':
+          return <Badge text='In progress' variant='warning' />;
+
+        case 'CLOSED':
+          return <Badge text='Closed' variant='success' />;
+      }
+    }
+  }),
+  columnHelper.display({
+    id: 'menu',
+    cell: cellContext => <TicketItemMenu ticketId={cellContext.cell.row.original.id} />
+  })
+];
+
+const Table: FC<Props> = ({ items }) => {
+  const { status, type } = useTableFiltersStore();
+
+  const filtredItems = useMemo(() => {
+    let result = items;
+
+    if (status !== 'all') {
+      result = items.filter(item => item.status === status);
+    }
+
+    if (type !== 'all') {
+      result = items.filter(item => item.type === type);
+    }
+
+    return result;
+  }, [items, status, type]);
+
+  const table = useReactTable({
+    columns,
+    data: filtredItems,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel()
+  });
 
   return (
     <StyledTable>
       <thead>
-        <tr>
-          <StyledTh>
-            <div>
-              Modified <SortIcon />
-            </div>
-          </StyledTh>
-          <StyledTh>
-            <div>
-              Type of Request <SortIcon />
-            </div>
-          </StyledTh>
-          <StyledTh>
-            <div>
-              Title <SortIcon />
-            </div>
-          </StyledTh>
-          <StyledTh>
-            <div>
-              Status <SortIcon />
-            </div>
-          </StyledTh>
-          <StyledTh></StyledTh>
-        </tr>
+        {table.getHeaderGroups().map(headerGroup => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map(header => (
+              <StyledTh key={header.id} $canBeSorted={header.column.getCanSort()}>
+                <div onClick={header.column.getToggleSortingHandler()}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {header.column.getCanSort() && <StyledSortIcon $direction={header.column.getIsSorted()} />}
+                </div>
+              </StyledTh>
+            ))}
+          </tr>
+        ))}
       </thead>
       <tbody>
-        <tr>
-          <StyledTd $variant='default'>19 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from company employees</StyledTd>
-          <StyledTd $variant='bold'>Issue with internal tools</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Submitted' variant='warning' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>19 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from the technical department for work and incidents</StyledTd>
-          <StyledTd $variant='bold'>Software update required</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Submitted' variant='warning' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>15 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Customers complaints</StyledTd>
-          <StyledTd $variant='bold'>Issue with product delivery</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Rejected by Supervisor' variant='danger' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>18 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from company employees</StyledTd>
-          <StyledTd $variant='bold'>Request for new software</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from the technical department for work and incidents</StyledTd>
-          <StyledTd $variant='bold'>System maintenance request</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Customers complaints</StyledTd>
-          <StyledTd $variant='bold'>Request for refund</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from the technical department for work and incidents</StyledTd>
-          <StyledTd $variant='bold'>Incident report: server downtime</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Requests from company employees</StyledTd>
-          <StyledTd $variant='bold'>Access request to internal system</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
-        <tr>
-          <StyledTd $variant='default'>14 Dec, 2020</StyledTd>
-          <StyledTd $variant='default'>Customers complaints</StyledTd>
-          <StyledTd $variant='bold'>Complaint about service quality</StyledTd>
-          <StyledTd $variant='default'>
-            <Badge text='Revoked' variant='success' />
-          </StyledTd>
-          <StyledTd $variant='default' onClick={() => navigate('/customers-complaints/?view')}>
-            ...
-          </StyledTd>
-        </tr>
+        {table.getRowModel().rows.map(row => (
+          <tr key={row.id}>
+            {row.getVisibleCells().map(cell => (
+              <StyledTd key={cell.id} $variant={cell.column.id === 'title' ? 'bold' : 'default'}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </StyledTd>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </StyledTable>
   );

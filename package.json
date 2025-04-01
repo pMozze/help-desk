@@ -11,12 +11,15 @@
   },
   "dependencies": {
     "@react-input/mask": "^2.0.4",
+    "@tanstack/react-table": "^8.21.2",
     "date-fns": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.2.0",
     "styled-components": "^6.1.15",
-    "vanilla-calendar-pro": "^3.0.3"
+    "swr": "^2.3.3",
+    "vanilla-calendar-pro": "^3.0.3",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

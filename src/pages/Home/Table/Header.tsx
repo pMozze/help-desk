@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { useTableFiltersStore } from './TableFiltersStore';
 import Dropdown from '@/components/Dropdown';
 
 const Title = styled.div`
@@ -20,19 +21,22 @@ const Wrapper = styled.div`
 `;
 
 const Header: FC = () => {
+  const { setType, setStatus } = useTableFiltersStore();
+
   return (
     <>
       <Title>Request List</Title>
       <Wrapper>
-        <Dropdown label='Type' items={[{ name: 'All', value: 'all' }]} />
+        <Dropdown label='Type' items={[{ name: 'All', value: 'all' }]} onSelect={item => setType(item.value)} />
         <Dropdown
           label='Status'
           items={[
             { name: 'All', value: 'all' },
-            { name: 'Submitted', value: 'submitted' },
-            { name: 'Revoked', value: 'revoked' },
-            { name: 'Rejected', value: 'rejected' }
+            { name: 'Closed', value: 'CLOSED' },
+            { name: 'In progress', value: 'IN_PROGRESS' },
+            { name: 'Created', value: 'CREATED' }
           ]}
+          onSelect={item => setStatus(item.value as 'all' | 'CLOSED' | 'IN_PROGRESS' | 'CREATED')}
         />
       </Wrapper>
     </>
