@@ -6,6 +6,7 @@ import ChevronDownIcon from '@icons/chevron-down.svg?react';
 type Option = {
   name: string;
   value: string;
+  selected?: boolean;
 };
 
 interface Props extends ComponentPropsWithoutRef<'select'> {
@@ -97,7 +98,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
   const { options, ...rest } = props;
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(options.find(option => option.selected) ?? null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -147,7 +148,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
           ))}
         </OptionsList>
       )}
-      <StyledSelect ref={ref} {...rest}>
+      <StyledSelect ref={ref} {...rest} defaultValue={selectedOption?.value}>
         {options.map((option, optionIndex) => (
           <option key={optionIndex} value={option.value}>
             {option.name}

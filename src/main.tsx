@@ -4,9 +4,9 @@ import { HashRouter, Routes, Route } from 'react-router';
 
 import Layout from './pages/Layout';
 import Home from './pages/Home';
-import EmployeesRequests from './pages/EmployeesRequests';
+import TicketPage from './pages/Ticket';
 import DepartmentRequests from './pages/DepartmentRequests';
-import CustomersComplaints from './pages/CustomersComplaints';
+import CustomersComplaints from './pages/Ticket';
 
 createRoot(document.getElementById('support-desk')!).render(
   <StrictMode>
@@ -14,7 +14,8 @@ createRoot(document.getElementById('support-desk')!).render(
       <Routes>
         <Route Component={Layout}>
           <Route index path='/' Component={Home} />
-          <Route path='/ticket/:id' Component={EmployeesRequests} />
+          <Route path='/ticket/create' Component={TicketPage} />
+          <Route path='/ticket/:id' Component={TicketPage} />
           <Route path='/department-requests' Component={DepartmentRequests} />
           <Route path='/customers-complaints' Component={CustomersComplaints} />
         </Route>

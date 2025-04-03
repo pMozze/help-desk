@@ -14,7 +14,7 @@ const StyledHeader = styled(Header)`
   margin-bottom: 15px;
 `;
 
-const CustomersComplaints: FC = () => {
+const TicketPage: FC = () => {
   const [searchParams] = useSearchParams();
 
   return (
@@ -25,4 +25,4 @@ const CustomersComplaints: FC = () => {
   );
 };
 
-export default CustomersComplaints;
+export default TicketPage;
