@@ -133,10 +133,10 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'REQUEST_TOPIC1', value: 'REQUEST_TOPIC1', selected: true },
+                { name: 'REQUEST_TOPIC1', value: 'REQUEST_TOPIC1' },
                 { name: 'REQUEST_TOPIC2', value: 'REQUEST_TOPIC2' },
                 { name: 'Other', value: 'Other' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.requestTopic }))}
               {...register('requestTopic', { disabled: true })}
             />
           }
@@ -147,12 +147,12 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'Chrome', value: 'Chrome', selected: true },
+                { name: 'Chrome', value: 'Chrome' },
                 { name: 'Firefox', value: 'Firefox' },
                 { name: 'Edge', value: 'Edge' },
                 { name: 'Safari', value: 'Safari' },
                 { name: 'Other', value: 'Other' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.browser }))}
               {...register('browser', { disabled: true })}
             />
           }
@@ -162,11 +162,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'Low', value: 'Low', selected: true },
+                { name: 'Low', value: 'Low' },
                 { name: 'Medium', value: 'Medium' },
                 { name: 'High', value: 'High' },
                 { name: 'Critical', value: 'Critical' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.requestPriority }))}
               {...register('requestPriority', { disabled: true })}
             />
           }
@@ -176,11 +176,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'WiFi', value: 'WiFi', selected: true },
+                { name: 'WiFi', value: 'WiFi' },
                 { name: 'Ethernet', value: 'Ethernet' },
                 { name: 'Mobile', value: 'Mobile' },
                 { name: 'Other', value: 'Other' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.networkInfo }))}
               {...register('networkInfo', { disabled: true })}
             />
           }
@@ -190,11 +190,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'Windows', value: 'Windows', selected: true },
+                { name: 'Windows', value: 'Windows' },
                 { name: 'macOS', value: 'macOS' },
                 { name: 'Linux', value: 'Linux' },
                 { name: 'Other', value: 'Other' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.OS }))}
               {...register('OS', { disabled: true })}
             />
           }
@@ -214,10 +214,10 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'Immediate', value: 'Immediate', selected: true },
+                { name: 'Immediate', value: 'Immediate' },
                 { name: 'Soon', value: 'Soon' },
                 { name: 'No Rush', value: 'No Rush' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.expectedResolution }))}
               {...register('expectedResolution', { disabled: true })}
             />
           }
@@ -227,10 +227,10 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={
             <Select
               options={[
-                { name: 'Email', value: 'Email', selected: true },
+                { name: 'Email', value: 'Email' },
                 { name: 'Phone', value: 'Phone' },
                 { name: 'Chat', value: 'Chat' }
-              ]}
+              ].map(option => ({ ...option, selected: option.value === defaultValues.preferredContact }))}
               {...register('preferredContact', { disabled: true })}
             />
           }
