@@ -1,12 +1,11 @@
 import { FC } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { useParams } from 'react-router';
 import useSWR from 'swr';
 import styled from 'styled-components';
 
 import { apiFetcher } from '@/api/utils';
 import { Ticket } from '@/api/models';
 
-import Header from './Header';
 import CreateForm from './CreateForm';
 import ViewForm from './ViewForm';
 
