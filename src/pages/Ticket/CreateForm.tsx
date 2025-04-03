@@ -57,12 +57,9 @@ const Buttons = styled.div`
   column-gap: 15px;
 `;
 
-const Form: FC = () => {
+const CreateForm: FC = () => {
   const { trigger } = useSWRMutation('/ticket/', (endpoint, options: { arg: FormData }) =>
-    apiFetcher(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(options.arg)
-    })
+    apiFetcher<FormData>(endpoint, 'PUT', options.arg)
   );
 
   const { register, handleSubmit, setValue /* getValues */ } = useForm<FormData>({
@@ -323,4 +320,4 @@ const Form: FC = () => {
   );
 };
 
-export default Form;
+export default CreateForm;

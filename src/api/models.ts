@@ -1,9 +1,3 @@
-export interface HTTPResponse<T> {
-  httpCode: number;
-  errorMessage: string;
-  data: T;
-}
-
 export interface TicketsItem {
   id: number;
   lastModifiedAt: number;

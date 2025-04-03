@@ -1,8 +1,26 @@
-import { HTTPResponse } from './models';
+interface HTTPResponse<T> {
+  httpCode: number;
+  errorMessage: string;
+  data: T;
+}
 
-export const apiFetcher = async (endpoint: string, init?: RequestInit) => {
-  const response = await fetch(import.meta.env.VITE_API_URL + endpoint, init);
-  const responseJson: HTTPResponse<any> = await response.json();
+type ApiFetcher = {
+  <Response = any>(endpoint: string): Promise<Response>;
+  <Response = any>(endpoint: string, method: 'DELETE'): Promise<Response>;
+  <Payload, Response = any>(endpoint: string, method: 'POST' | 'PUT', data: Payload): Promise<Response>;
+};
+
+export const apiFetcher: ApiFetcher = async <Response, Payload>(
+  endpoint: string,
+  method?: 'DELETE' | 'POST' | 'PUT',
+  data?: Payload
+) => {
+  const response = await fetch(import.meta.env.VITE_API_URL + endpoint, {
+    method: method ?? 'GET',
+    body: data ? JSON.stringify(data) : undefined
+  });
+
+  const responseJson: HTTPResponse<Response> = await response.json();
 
   if (responseJson.httpCode < 200 || responseJson.httpCode > 299) {
     throw new Error(responseJson.errorMessage);

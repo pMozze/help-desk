@@ -95,7 +95,7 @@ const OptionItem = styled.button<{ $isActive: boolean }>`
 `;
 
 const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
-  const { options, ...rest } = props;
+  const { options, disabled, ...rest } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(options.find(option => option.selected) ?? null);
@@ -128,7 +128,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
 
   return (
     <Wrapper ref={wrapperRef}>
-      <Button type='button' onClick={() => setIsOpen(!isOpen)}>
+      <Button type='button' onClick={() => setIsOpen(!isOpen)} disabled={disabled}>
         <SelectedOption>{selectedOption?.name}</SelectedOption>
         <ChevronDownIcon width={16} height={16} />
       </Button>
@@ -148,7 +148,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
           ))}
         </OptionsList>
       )}
-      <StyledSelect ref={ref} {...rest} defaultValue={selectedOption?.value}>
+      <StyledSelect ref={ref} {...rest} disabled={disabled} defaultValue={selectedOption?.value}>
         {options.map((option, optionIndex) => (
           <option key={optionIndex} value={option.value}>
             {option.name}

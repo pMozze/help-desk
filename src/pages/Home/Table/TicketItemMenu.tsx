@@ -100,7 +100,7 @@ const TicketItemMenu: FC<Props> = ({ ticketId }) => {
   }, []);
 
   const onDeleteTicket = async () => {
-    await apiFetcher(`/ticket/${ticketId}/`, { method: 'DELETE' });
+    await apiFetcher(`/ticket/${ticketId}/`, 'DELETE');
     await mutate('/ticket/');
     setIsOpen(false);
   };
