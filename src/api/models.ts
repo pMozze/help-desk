@@ -9,6 +9,7 @@ export interface TicketsItem {
 export interface Ticket {
   id: number;
   name: string;
+  description: string;
   status: string;
   username: string;
   contactInfo: string;

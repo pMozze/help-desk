@@ -8,7 +8,7 @@ const Page = styled.div`
   background-color: #fff;
 `;
 
-const EmployeesRequests: FC = () => {
+const RequestsPage: FC = () => {
   return (
     <Page>
       <Form />
@@ -16,4 +16,4 @@ const EmployeesRequests: FC = () => {
   );
 };
 
-export default EmployeesRequests;
+export default RequestsPage;

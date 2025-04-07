@@ -7,19 +7,23 @@ interface HTTPResponse<T> {
 type ApiFetcher = {
   <Response = any>(endpoint: string): Promise<Response>;
   <Response = any>(endpoint: string, method: 'DELETE'): Promise<Response>;
-  <Payload, Response = any>(endpoint: string, method: 'POST' | 'PUT', data: Payload): Promise<Response>;
+  <Payload, Response = any>(endpoint: string, method: 'PATCH' | 'PUT', data: Payload): Promise<Response>;
 };
 
 export const apiFetcher: ApiFetcher = async <Response, Payload>(
   endpoint: string,
-  method?: 'DELETE' | 'POST' | 'PUT',
+  method?: 'DELETE' | 'PATCH' | 'PUT',
   data?: Payload
 ) => {
-  const response = await fetch(import.meta.env.VITE_API_URL + endpoint, {
-    method: method ?? 'GET',
-    body: data ? JSON.stringify(data) : undefined
-  });
+  const init: RequestInit = {
+    method: method ?? 'GET'
+  };
 
+  if (data) {
+    init.body = data instanceof FormData ? data : JSON.stringify(data);
+  }
+
+  const response = await fetch(import.meta.env.VITE_API_URL + endpoint, init);
   const responseJson: HTTPResponse<Response> = await response.json();
 
   if (responseJson.httpCode < 200 || responseJson.httpCode > 299) {

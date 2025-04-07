@@ -20,11 +20,11 @@ const CardsWrapper = styled.div`
 const Cards: FC = () => {
   return (
     <CardsWrapper>
-      <Card title='Requests from company employees' icon={EApplicationIcon} href='/employees-requests' />
+      <Card title='Requests from company employees' icon={EApplicationIcon} href='/requests/create' />
       <Card
         title='Requests from the technical department for work and incidents'
         icon={EApplication2Icon}
-        href='/department-requests'
+        href='/requests/create'
       />
       <Card title='Customers complaints' icon={EApplication3Icon} href='/ticket/create' />
     </CardsWrapper>

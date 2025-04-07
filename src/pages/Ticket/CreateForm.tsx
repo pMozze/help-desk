@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef /* FormEventHandler */ } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { format as formatDate, getUnixTime /* fromUnixTime, setHours, setMinutes */ } from 'date-fns';
+import { format as formatDate, getUnixTime } from 'date-fns';
 
 import useSWRMutation from 'swr/mutation';
 import styled from 'styled-components';
@@ -15,7 +15,6 @@ import FormSection from './FormSection';
 import FormControl from './FormControl';
 
 import Input from '@/components/ui/Input';
-// import MaskedInput from '@/components/MaskedInput';
 import Select from '@/components/ui/Select';
 import TextArea from '@/components/ui/TextArea';
 import FileUploader from '@/components/ui/FileUploader';
@@ -39,7 +38,7 @@ interface FormData {
   impactOnWork: string;
   expectedResolution: string;
   preferredContact: string;
-  screenshots: [];
+  screenshots: FileList;
 }
 
 const Wrapper = styled.form`
@@ -58,22 +57,17 @@ const Buttons = styled.div`
 `;
 
 const CreateForm: FC = () => {
-  const { trigger } = useSWRMutation('/ticket/', (endpoint, options: { arg: FormData }) =>
-    apiFetcher<FormData>(endpoint, 'PUT', options.arg)
+  const { trigger } = useSWRMutation('/ticket/', (endpoint, options: { arg: globalThis.FormData }) =>
+    apiFetcher<globalThis.FormData>(endpoint, 'PUT', options.arg)
   );
 
-  const { register, handleSubmit, setValue /* getValues */ } = useForm<FormData>({
-    defaultValues: {
-      screenshots: []
-    }
-  });
+  const { register, handleSubmit, setValue } = useForm<FormData>();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const eventDateCalendarRef = useRef<Calendar | null>(null);
   const eventDateInputRef = useRef<HTMLInputElement>(null);
-  // const eventTimeInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (eventDateCalendarRef.current) {
@@ -104,26 +98,29 @@ const CreateForm: FC = () => {
   }, []);
 
   const submitHandler: SubmitHandler<FormData> = data => {
-    trigger(data);
+    const formData = new FormData();
+    formData.append('OS', data.OS);
+    formData.append('browser', data.browser);
+    formData.append('companyId', data.companyId);
+    formData.append('contactInfo', data.contactInfo);
+    formData.append('device', data.device);
+    formData.append('eventDate', data.eventDate.toString());
+    formData.append('expectedResolution', data.expectedResolution);
+    formData.append('impactOnWork', data.impactOnWork);
+    formData.append('networkInfo', data.networkInfo);
+    formData.append('preferredContact', data.preferredContact);
+    formData.append('requestPriority', data.requestPriority);
+    formData.append('requestTopic', data.requestTopic);
+    formData.append('userId', data.userId);
+    formData.append('username', data.username);
+
+    for (const file of data.screenshots) {
+      formData.append('screenshots[]', file);
+    }
+
+    trigger(formData);
     navigate('/');
   };
-
-  // const eventTimeInputHandler: FormEventHandler<HTMLInputElement> = event => {
-  //   const inputValue = event.currentTarget.value;
-
-  //   if (inputValue.length !== 5) {
-  //     return;
-  //   }
-
-  //   const parsedTime = inputValue.split(':').map(Number);
-  //   const newEventDate = setMinutes(
-  //     setHours(fromUnixTime(getValues('eventDate') ?? getUnixTime(new Date())), parsedTime[0]),
-  //     parsedTime[1]
-  //   );
-
-  //   setValue('eventDate', getUnixTime(newEventDate));
-  //   eventDateInputRef.current!.value = formatDate(newEventDate, 'dd MMM yyyy');
-  // };
 
   return (
     <Wrapper onSubmit={handleSubmit(submitHandler)}>
@@ -139,24 +136,6 @@ const CreateForm: FC = () => {
           title='Event date'
           control={<Input ref={eventDateInputRef} type='text' icon={CalendarIcon} required />}
         />
-        {/* <FormControl
-          title='Event time'
-          control={
-            <MaskedInput
-              ref={eventTimeInputRef}
-              type='text'
-              placeholder='hh:mm'
-              maskOptions={{
-                mask: 'xx:xx',
-                replacement: {
-                  x: /\d/
-                }
-              }}
-              required
-              onInput={eventTimeInputHandler}
-            />
-          }
-        /> */}
         <FormControl
           title='User identification (ID or Email)'
           control={<Input type='text' {...register('userId', { required: true })} />}
@@ -247,6 +226,7 @@ const CreateForm: FC = () => {
         subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
         multiple
         accept='.png,.jpg,.jpeg,.pdf'
+        {...register('screenshots', { required: true })}
       />
       {searchParams.has('view') || searchParams.has('edit') ? (
         <FormSection>
@@ -294,28 +274,14 @@ const CreateForm: FC = () => {
           />
         </FormSection>
       )}
-      {searchParams.has('view') || searchParams.has('edit') ? (
-        <Buttons>
-          <Button type='submit' $type='primary'>
-            Save
-          </Button>
-          <Button type='submit' $type='black'>
-            Apply
-          </Button>
-          <Button type='button' $type='bordered'>
-            Reset
-          </Button>
-        </Buttons>
-      ) : (
-        <Buttons>
-          <Button type='submit' $type='primary'>
-            Send
-          </Button>
-          <Button type='button' $type='ghost' onClick={() => navigate('/')}>
-            Cancel
-          </Button>
-        </Buttons>
-      )}
+      <Buttons>
+        <Button type='submit' $type='primary'>
+          Send
+        </Button>
+        <Button type='button' $type='ghost' onClick={() => navigate('/')}>
+          Cancel
+        </Button>
+      </Buttons>
     </Wrapper>
   );
 };

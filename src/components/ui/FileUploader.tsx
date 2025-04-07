@@ -5,6 +5,10 @@ import FileIcon from '@icons/file.svg?react';
 
 interface Props {
   subtitle: string;
+  defaultFiles?: {
+    name: string;
+    url: string;
+  }[];
 }
 
 const Wrapper = styled.div`
@@ -78,16 +82,27 @@ const File = styled.div`
   font-weight: 500;
 
   text-align: center;
+  text-decoration: none;
   word-break: break-word;
 
   color: #868686;
   background-color: #fff;
 
   border-radius: 12px;
+
+  > span {
+    overflow: hidden;
+
+    display: block;
+    width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 `;
 
 const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutRef<'input'>>((props, ref) => {
-  const { className, subtitle, ...rest } = props;
+  const { className, subtitle, defaultFiles, ...rest } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<string[]>([]);
 
@@ -115,16 +130,23 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
       <Title>Attach screenshots or documents </Title>
       <Subtitle>{subtitle}</Subtitle>
       <Body>
-        {!!files.length && (
-          <FileList>
-            {files.map((file, fileIndex) => (
-              <File key={fileIndex}>
-                <FileIcon />
-                {file}
-              </File>
-            ))}
-          </FileList>
-        )}
+        {!!files.length ||
+          (!!defaultFiles?.length && (
+            <FileList>
+              {defaultFiles.map((file, fileIndex) => (
+                <File key={fileIndex} as='a' href={file.url} download>
+                  <FileIcon />
+                  <span title={file.name}>{file.name}</span>
+                </File>
+              ))}
+              {files.map((file, fileIndex) => (
+                <File key={fileIndex}>
+                  <FileIcon />
+                  <span title={file}>{file}</span>
+                </File>
+              ))}
+            </FileList>
+          ))}
         <DropZone>
           Drop your files here
           <input ref={inputRef} {...rest} type='file' />

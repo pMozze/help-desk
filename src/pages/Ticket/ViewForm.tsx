@@ -1,12 +1,14 @@
 import { FC, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { useForm } from 'react-hook-form';
+import { useNavigate, useSearchParams } from 'react-router';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { format as formatDate, fromUnixTime, getUnixTime } from 'date-fns';
-
+import useSWRMutation from 'swr/mutation';
 import styled from 'styled-components';
 
 import { Calendar } from 'vanilla-calendar-pro';
 import { getDate } from 'vanilla-calendar-pro/utils';
+
+import { apiFetcher } from '@/api/utils';
 
 import FormSection from './FormSection';
 import FormControl from './FormControl';
@@ -14,6 +16,7 @@ import FormControl from './FormControl';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import TextArea from '@/components/ui/TextArea';
+import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
 import CalendarIcon from '@icons/calendar.svg?react';
@@ -38,7 +41,10 @@ interface FormData {
   impactOnWork: string;
   expectedResolution: string;
   preferredContact: string;
-  screenshots: [];
+  screenshots: {
+    name: string;
+    url: string;
+  }[];
 }
 
 const Wrapper = styled.form`
@@ -57,9 +63,17 @@ const Buttons = styled.div`
 `;
 
 const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
-  const { register, setValue } = useForm<FormData>({
+  const [searchParams] = useSearchParams();
+
+  const { register, setValue, handleSubmit } = useForm<FormData>({
     defaultValues
   });
+
+  const { trigger } = useSWRMutation(
+    `/ticket/${ticketId}/`,
+    (endpoint, options: { arg: Omit<FormData, 'screenshots'> }) =>
+      apiFetcher<Omit<FormData, 'screenshots'>>(endpoint, 'PATCH', options.arg)
+  );
 
   const navigate = useNavigate();
   const eventDateCalendarRef = useRef<Calendar | null>(null);
@@ -93,13 +107,22 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
     eventDateCalendarRef.current.init();
   }, []);
 
+  const submitHandler: SubmitHandler<FormData> = data => {
+    const { screenshots, ...newData } = data;
+    trigger(newData);
+    navigate('/');
+  };
+
   return (
-    <Wrapper onSubmit={event => event.preventDefault()}>
+    <Wrapper onSubmit={handleSubmit(submitHandler)}>
       <FormSection title='Applicant information'>
-        <FormControl title='User name' control={<Input type='text' {...register('username', { disabled: true })} />} />
+        <FormControl
+          title='User name'
+          control={<Input type='text' {...register('username', { disabled: !searchParams.has('edit') })} />}
+        />
         <FormControl
           title='Contact information, position or department'
-          control={<Input type='text' {...register('contactInfo', { disabled: true })} />}
+          control={<Input type='text' {...register('contactInfo', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
       <FormSection title='Event data'>
@@ -120,11 +143,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
         />
         <FormControl
           title='User identification (ID or Email)'
-          control={<Input type='text' {...register('userId', { disabled: true })} />}
+          control={<Input type='text' {...register('userId', { disabled: !searchParams.has('edit') })} />}
         />
         <FormControl
           title='Company identification (ID or name)'
-          control={<Input type='text' {...register('companyId', { disabled: true })} />}
+          control={<Input type='text' {...register('companyId', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
       <FormSection title='Issue description'>
@@ -137,11 +160,14 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'REQUEST_TOPIC2', value: 'REQUEST_TOPIC2' },
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.requestTopic }))}
-              {...register('requestTopic', { disabled: true })}
+              {...register('requestTopic', { disabled: !searchParams.has('edit') })}
             />
           }
         />
-        <FormControl title='Device' control={<Input type='text' {...register('device', { disabled: true })} />} />
+        <FormControl
+          title='Device'
+          control={<Input type='text' {...register('device', { disabled: !searchParams.has('edit') })} />}
+        />
         <FormControl
           title='Browser'
           control={
@@ -153,7 +179,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Safari', value: 'Safari' },
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.browser }))}
-              {...register('browser', { disabled: true })}
+              {...register('browser', { disabled: !searchParams.has('edit') })}
             />
           }
         />
@@ -167,7 +193,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'High', value: 'High' },
                 { name: 'Critical', value: 'Critical' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.requestPriority }))}
-              {...register('requestPriority', { disabled: true })}
+              {...register('requestPriority', { disabled: !searchParams.has('edit') })}
             />
           }
         />
@@ -181,7 +207,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Mobile', value: 'Mobile' },
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.networkInfo }))}
-              {...register('networkInfo', { disabled: true })}
+              {...register('networkInfo', { disabled: !searchParams.has('edit') })}
             />
           }
         />
@@ -195,19 +221,29 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Linux', value: 'Linux' },
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.OS }))}
-              {...register('OS', { disabled: true })}
+              {...register('OS', { disabled: !searchParams.has('edit') })}
             />
           }
         />
         <FormControl
           title='Impact on work'
-          control={<StyledTextArea rows={6} {...register('impactOnWork', { disabled: true })} />}
+          control={<StyledTextArea rows={6} {...register('impactOnWork', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
       <iframe
-        src={`https://bx-dev.swrpro.com/helpdesk/iframe.php?IFRAME=Y&ID=${ticketId}`}
-        style={{ border: 'none' }}
+        src={`${import.meta.env.VITE_URL}/helpdesk/iframe.php?IFRAME=Y&ID=${ticketId}`}
+        style={{ height: 500, border: 'none' }}
       ></iframe>
+      <FileUploader
+        subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
+        multiple
+        accept='.png,.jpg,.jpeg,.pdf'
+        disabled
+        defaultFiles={defaultValues.screenshots?.map(file => ({
+          name: file.name,
+          url: import.meta.env.VITE_URL + file.url
+        }))}
+      />
       <FormSection title='Expected support outcome'>
         <FormControl
           title='Expected resolution'
@@ -218,7 +254,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Soon', value: 'Soon' },
                 { name: 'No Rush', value: 'No Rush' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.expectedResolution }))}
-              {...register('expectedResolution', { disabled: true })}
+              {...register('expectedResolution', { disabled: !searchParams.has('edit') })}
             />
           }
         />
@@ -231,12 +267,17 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Phone', value: 'Phone' },
                 { name: 'Chat', value: 'Chat' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.preferredContact }))}
-              {...register('preferredContact', { disabled: true })}
+              {...register('preferredContact', { disabled: !searchParams.has('edit') })}
             />
           }
         />
       </FormSection>
       <Buttons>
+        {searchParams.has('edit') && (
+          <Button type='submit' $type='primary'>
+            Apply
+          </Button>
+        )}
         <Button type='button' $type='bordered' onClick={() => navigate('/')}>
           Back
         </Button>

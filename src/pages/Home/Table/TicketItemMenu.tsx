@@ -78,6 +78,7 @@ const TicketItemMenu: FC<Props> = ({ ticketId }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownWrapperRef = useRef<HTMLDivElement>(null);
+  const role = document.getElementById('help-desk')!.dataset.role;
 
   useEffect(() => {
     const onClickHandler = (event: MouseEvent) => {
@@ -100,9 +101,9 @@ const TicketItemMenu: FC<Props> = ({ ticketId }) => {
   }, []);
 
   const onDeleteTicket = async () => {
+    setIsOpen(false);
     await apiFetcher(`/ticket/${ticketId}/`, 'DELETE');
     await mutate('/ticket/');
-    setIsOpen(false);
   };
 
   return (
@@ -114,18 +115,22 @@ const TicketItemMenu: FC<Props> = ({ ticketId }) => {
       </TicketItemMenuButton>
       {isOpen && (
         <TicketItemMenuItems>
-          <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}/?view`)}>
+          <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}`)}>
             <EyeIcon />
             View
           </TicketItemMenuItemsButton>
-          <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}/?edit`)}>
-            <EditIcon />
-            Edit
-          </TicketItemMenuItemsButton>
-          <TicketItemMenuItemsButton type='button' onClick={onDeleteTicket}>
-            <DeleteIcon />
-            Delete
-          </TicketItemMenuItemsButton>
+          {role === 'support' && (
+            <>
+              <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}/?edit`)}>
+                <EditIcon />
+                Edit
+              </TicketItemMenuItemsButton>
+              <TicketItemMenuItemsButton type='button' onClick={onDeleteTicket}>
+                <DeleteIcon />
+                Delete
+              </TicketItemMenuItemsButton>
+            </>
+          )}
         </TicketItemMenuItems>
       )}
     </TicketItemMenuWrapper>
