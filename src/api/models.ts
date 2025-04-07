@@ -2,7 +2,7 @@ export interface TicketsItem {
   id: number;
   lastModifiedAt: number;
   type: string;
-  title: string;
+  title: string | null;
   status: string;
 }
 

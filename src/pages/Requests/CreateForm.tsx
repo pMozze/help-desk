@@ -33,16 +33,20 @@ const Buttons = styled.div`
   column-gap: 15px;
 `;
 
-const Form: FC = () => {
+const CreateForm: FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormData>();
 
-  const { trigger } = useSWRMutation('/ticket/', (endpoint, options: { arg: FormData }) =>
-    apiFetcher<FormData>(endpoint, 'PUT', options.arg)
+  const { trigger } = useSWRMutation('/ticket/', (endpoint, options: { arg: globalThis.FormData }) =>
+    apiFetcher<globalThis.FormData>(endpoint, 'PUT', options.arg)
   );
 
   const submitHandler: SubmitHandler<FormData> = data => {
-    trigger(data);
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('description', data.description);
+
+    trigger(formData);
     navigate('/');
   };
 
@@ -59,7 +63,7 @@ const Form: FC = () => {
         <Button type='submit' $type='primary'>
           Send
         </Button>
-        <Button type='button' $type='ghost' onClick={() => navigate('/')}>
+        <Button type='button' $type='bordered' onClick={() => navigate('/')}>
           Cancel
         </Button>
       </Buttons>
@@ -67,4 +71,4 @@ const Form: FC = () => {
   );
 };
 
-export default Form;
+export default CreateForm;

@@ -11,6 +11,7 @@ import DeleteIcon from '@icons/delete.svg?react';
 
 interface Props {
   ticketId: number;
+  type: 'ticket' | 'request';
 }
 
 const TicketItemMenuWrapper = styled.div`
@@ -74,7 +75,7 @@ const TicketItemMenuItemsButton = styled.button`
   }
 `;
 
-const TicketItemMenu: FC<Props> = ({ ticketId }) => {
+const TicketItemMenu: FC<Props> = ({ ticketId, type }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownWrapperRef = useRef<HTMLDivElement>(null);
@@ -115,13 +116,19 @@ const TicketItemMenu: FC<Props> = ({ ticketId }) => {
       </TicketItemMenuButton>
       {isOpen && (
         <TicketItemMenuItems>
-          <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}`)}>
+          <TicketItemMenuItemsButton
+            type='button'
+            onClick={() => navigate(`/${type === 'ticket' ? 'ticket' : 'requests'}/${ticketId}`)}
+          >
             <EyeIcon />
             View
           </TicketItemMenuItemsButton>
           {role === 'support' && (
             <>
-              <TicketItemMenuItemsButton type='button' onClick={() => navigate(`/ticket/${ticketId}/?edit`)}>
+              <TicketItemMenuItemsButton
+                type='button'
+                onClick={() => navigate(`/${type === 'ticket' ? 'ticket' : 'requests'}/${ticketId}/?edit`)}
+              >
                 <EditIcon />
                 Edit
               </TicketItemMenuItemsButton>

@@ -114,7 +114,12 @@ const columns = [
   }),
   columnHelper.display({
     id: 'menu',
-    cell: cellContext => <TicketItemMenu ticketId={cellContext.cell.row.original.id} />
+    cell: cellContext => (
+      <TicketItemMenu
+        ticketId={cellContext.cell.row.original.id}
+        type={cellContext.cell.row.original.title ? 'request' : 'ticket'}
+      />
+    )
   })
 ];
 

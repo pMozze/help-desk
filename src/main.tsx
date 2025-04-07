@@ -16,6 +16,7 @@ createRoot(document.getElementById('help-desk')!).render(
           <Route path='/ticket/create' Component={TicketPage} />
           <Route path='/ticket/:id' Component={TicketPage} />
           <Route path='/requests/create' Component={RequestsPage} />
+          <Route path='/requests/:id' Component={RequestsPage} />
         </Route>
       </Routes>
     </HashRouter>
