@@ -24,6 +24,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import CalendarIcon from '@icons/calendar.svg?react';
 
 interface FormData {
+  type: string;
   username: string;
   contactInfo: string;
   eventDate: number;
@@ -36,6 +37,7 @@ interface FormData {
   networkInfo: string;
   OS: string;
   impactOnWork: string;
+  description: string;
   expectedResolution: string;
   preferredContact: string;
   screenshots: FileList;
@@ -99,6 +101,7 @@ const CreateForm: FC = () => {
 
   const submitHandler: SubmitHandler<FormData> = data => {
     const formData = new FormData();
+    formData.append('type', 'Customers complaints');
     formData.append('OS', data.OS);
     formData.append('browser', data.browser);
     formData.append('companyId', data.companyId);
@@ -107,6 +110,7 @@ const CreateForm: FC = () => {
     formData.append('eventDate', data.eventDate.toString());
     formData.append('expectedResolution', data.expectedResolution);
     formData.append('impactOnWork', data.impactOnWork);
+    formData.append('description', data.description);
     formData.append('networkInfo', data.networkInfo);
     formData.append('preferredContact', data.preferredContact);
     formData.append('requestPriority', data.requestPriority);
@@ -125,10 +129,10 @@ const CreateForm: FC = () => {
   return (
     <Wrapper onSubmit={handleSubmit(submitHandler)}>
       <FormSection title='Applicant information'>
-        <FormControl title='User name' control={<Input type='text' {...register('username', { required: true })} />} />
+        <FormControl title='User name' control={<Input type='text' {...register('username', { required: false })} />} />
         <FormControl
           title='Contact information, position or department'
-          control={<Input type='text' {...register('contactInfo', { required: true })} />}
+          control={<Input type='text' {...register('contactInfo', { required: false })} />}
         />
       </FormSection>
       <FormSection title='Event data'>
@@ -138,11 +142,11 @@ const CreateForm: FC = () => {
         />
         <FormControl
           title='User identification (ID or Email)'
-          control={<Input type='text' {...register('userId', { required: true })} />}
+          control={<Input type='text' {...register('userId', { required: false })} />}
         />
         <FormControl
           title='Company identification (ID or name)'
-          control={<Input type='text' {...register('companyId', { required: true })} />}
+          control={<Input type='text' {...register('companyId', { required: false })} />}
         />
       </FormSection>
       <FormSection title='Issue description'>
@@ -151,15 +155,18 @@ const CreateForm: FC = () => {
           control={
             <Select
               options={[
-                { name: 'REQUEST_TOPIC1', value: 'REQUEST_TOPIC1', selected: true },
-                { name: 'REQUEST_TOPIC2', value: 'REQUEST_TOPIC2' },
-                { name: 'Other', value: 'Other' }
+                { name: 'Group', value: 'Group', selected: true },
+                { name: 'Subgroup', value: 'Subgroup' }
               ]}
-              {...register('requestTopic', { required: true })}
+              {...register('requestTopic', { required: false })}
             />
           }
         />
-        <FormControl title='Device' control={<Input type='text' {...register('device', { required: true })} />} />
+        <FormControl
+          title='Description'
+          control={<StyledTextArea rows={4} {...register('description', { required: true })} />}
+        />
+        <FormControl title='Device' control={<Input type='text' {...register('device', { required: false })} />} />
         <FormControl
           title='Browser'
           control={
@@ -171,7 +178,7 @@ const CreateForm: FC = () => {
                 { name: 'Safari', value: 'Safari' },
                 { name: 'Other', value: 'Other' }
               ]}
-              {...register('browser', { required: true })}
+              {...register('browser', { required: false })}
             />
           }
         />
@@ -182,10 +189,9 @@ const CreateForm: FC = () => {
               options={[
                 { name: 'Low', value: 'Low', selected: true },
                 { name: 'Medium', value: 'Medium' },
-                { name: 'High', value: 'High' },
-                { name: 'Critical', value: 'Critical' }
+                { name: 'High', value: 'High' }
               ]}
-              {...register('requestPriority', { required: true })}
+              {...register('requestPriority', { required: false })}
             />
           }
         />
@@ -199,7 +205,7 @@ const CreateForm: FC = () => {
                 { name: 'Mobile', value: 'Mobile' },
                 { name: 'Other', value: 'Other' }
               ]}
-              {...register('networkInfo', { required: true })}
+              {...register('networkInfo', { required: false })}
             />
           }
         />
@@ -211,22 +217,24 @@ const CreateForm: FC = () => {
                 { name: 'Windows', value: 'Windows', selected: true },
                 { name: 'macOS', value: 'macOS' },
                 { name: 'Linux', value: 'Linux' },
+                { name: 'Android', value: 'Android' },
+                { name: 'iOS', value: 'iOS' },
                 { name: 'Other', value: 'Other' }
               ]}
-              {...register('OS', { required: true })}
+              {...register('OS', { required: false })}
             />
           }
         />
         <FormControl
           title='Impact on work'
-          control={<StyledTextArea rows={6} {...register('impactOnWork', { required: true })} />}
+          control={<StyledTextArea rows={6} {...register('impactOnWork', { required: false })} />}
         />
       </FormSection>
       <FileUploader
         subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
         multiple
         accept='.png,.jpg,.jpeg,.pdf'
-        {...register('screenshots', { required: true })}
+        {...register('screenshots', { required: false })}
       />
       {searchParams.has('view') || searchParams.has('edit') ? (
         <FormSection>
@@ -255,7 +263,7 @@ const CreateForm: FC = () => {
                   { name: 'Soon', value: 'Soon' },
                   { name: 'No Rush', value: 'No Rush' }
                 ]}
-                {...register('expectedResolution', { required: true })}
+                {...register('expectedResolution', { required: false })}
               />
             }
           />
@@ -268,7 +276,7 @@ const CreateForm: FC = () => {
                   { name: 'Phone', value: 'Phone' },
                   { name: 'Chat', value: 'Chat' }
                 ]}
-                {...register('preferredContact', { required: true })}
+                {...register('preferredContact', { required: false })}
               />
             }
           />

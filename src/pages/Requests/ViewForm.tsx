@@ -90,7 +90,7 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
       <Buttons>
         {searchParams.has('edit') && (
           <Button type='submit' $type='primary'>
-            Apple
+            Apply
           </Button>
         )}
         <Button type='button' $type='bordered' onClick={() => navigate('/')}>
