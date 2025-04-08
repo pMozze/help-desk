@@ -12,6 +12,7 @@ import FormControl from './FormControl';
 
 import Input from '@/components/ui/Input';
 import TextArea from '@/components/ui/TextArea';
+import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
 interface Props {
@@ -22,6 +23,10 @@ interface Props {
 interface FormData {
   name: string;
   description: string;
+  screenshots: {
+    name: string;
+    url: string;
+  }[];
 }
 
 const Wrapper = styled.form`
@@ -40,8 +45,6 @@ const Buttons = styled.div`
 `;
 
 const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
-  console.log(defaultValues);
-
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -70,6 +73,20 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
           control={<StyledTextArea rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
+      <iframe
+        src={`${import.meta.env.VITE_URL}/helpdesk/iframe.php?IFRAME=Y&ID=${requestId}`}
+        style={{ height: 500, border: 'none' }}
+      ></iframe>
+      <FileUploader
+        subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
+        multiple
+        accept='.png,.jpg,.jpeg,.pdf'
+        disabled
+        defaultFiles={defaultValues.screenshots?.map(file => ({
+          name: file.name,
+          url: import.meta.env.VITE_URL + file.url
+        }))}
+      />
       <Buttons>
         {searchParams.has('edit') && (
           <Button type='submit' $type='primary'>

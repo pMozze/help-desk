@@ -11,11 +11,13 @@ import FormControl from './FormControl';
 
 import Input from '@/components/ui/Input';
 import TextArea from '@/components/ui/TextArea';
+import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
 interface FormData {
   name: string;
   description: string;
+  screenshots: [];
 }
 
 const Wrapper = styled.form`
@@ -46,6 +48,10 @@ const CreateForm: FC = () => {
     formData.append('name', data.name);
     formData.append('description', data.description);
 
+    for (const file of data.screenshots) {
+      formData.append('screenshots[]', file);
+    }
+
     trigger(formData);
     navigate('/');
   };
@@ -59,6 +65,12 @@ const CreateForm: FC = () => {
           control={<StyledTextArea rows={6} {...register('description', { required: true })} />}
         />
       </FormSection>
+      <FileUploader
+        subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
+        multiple
+        accept='.png,.jpg,.jpeg,.pdf'
+        {...register('screenshots', { required: true })}
+      />
       <Buttons>
         <Button type='submit' $type='primary'>
           Send
