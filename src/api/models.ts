@@ -10,7 +10,7 @@ export interface Ticket {
   id: number;
   name: string;
   description: string;
-  status: string;
+  status: 'CREATED' | 'IN_PROGRESS' | 'CLOSED';
   username: string;
   contactInfo: string;
   eventDate: number;
@@ -26,4 +26,5 @@ export interface Ticket {
   screenshots: [];
   expectedResolution: string;
   preferredContact: string;
+  responsibleId: string;
 }

@@ -12,6 +12,7 @@ import FormControl from './FormControl';
 
 import Input from '@/components/ui/Input';
 import TextArea from '@/components/ui/TextArea';
+import Chat from '@/components/Chat';
 import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
@@ -73,10 +74,7 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
           control={<StyledTextArea rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
-      <iframe
-        src={`${import.meta.env.VITE_URL}/helpdesk/iframe.php?IFRAME=Y&ID=${requestId}`}
-        style={{ height: 500, border: 'none' }}
-      ></iframe>
+      <Chat id={requestId} />
       <FileUploader
         subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
         multiple

@@ -9,8 +9,9 @@ type Option = {
   selected?: boolean;
 };
 
-interface Props extends ComponentPropsWithoutRef<'select'> {
+interface Props extends Omit<ComponentPropsWithoutRef<'select'>, 'onSelect'> {
   options: Option[];
+  onSelect?: (option: Option) => void;
 }
 
 const Wrapper = styled.div`
@@ -95,7 +96,7 @@ const OptionItem = styled.button<{ $isActive: boolean }>`
 `;
 
 const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
-  const { options, disabled, ...rest } = props;
+  const { options, disabled, onSelect, ...rest } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(options.find(option => option.selected) ?? null);
@@ -121,9 +122,10 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
     };
   }, []);
 
-  const onSelect = useCallback((option: Option) => {
+  const onSelectHandler = useCallback((option: Option) => {
     setSelectedOption(option);
     setIsOpen(false);
+    onSelect && onSelect(option);
   }, []);
 
   return (
@@ -138,7 +140,7 @@ const Select = forwardRef<HTMLSelectElement, Props>((props, ref) => {
             <OptionItem
               key={optionIndex}
               onClick={event => {
-                onSelect(option);
+                onSelectHandler(option);
                 event.preventDefault();
               }}
               $isActive={selectedOption === option}

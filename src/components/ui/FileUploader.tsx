@@ -58,12 +58,17 @@ const DropZone = styled.label`
   user-select: none;
 `;
 
-const FileList = styled.div`
+const FileList = styled.div<{ $separator: boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #e3e3e3;
+
+  ${({ $separator }) =>
+    $separator &&
+    `
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e3e3e3;
+  `}
 `;
 
 const File = styled.div`
@@ -107,7 +112,11 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
   const [files, setFiles] = useState<string[]>([]);
 
   useEffect(() => {
-    const input = inputRef.current!;
+    const input = inputRef.current;
+
+    if (!input) {
+      return;
+    }
 
     const onChangeHandler = () => {
       const filesNames = [];
@@ -127,30 +136,35 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
 
   return (
     <Wrapper className={className}>
-      <Title>Attach screenshots or documents </Title>
-      <Subtitle>{subtitle}</Subtitle>
+      {!!!defaultFiles?.length && (
+        <>
+          <Title>Attach screenshots or documents </Title>
+          <Subtitle>{subtitle}</Subtitle>
+        </>
+      )}
       <Body>
-        {!!files.length ||
-          (!!defaultFiles?.length && (
-            <FileList>
-              {defaultFiles.map((file, fileIndex) => (
-                <File key={fileIndex} as='a' href={file.url} download>
-                  <FileIcon />
-                  <span title={file.name}>{file.name}</span>
-                </File>
-              ))}
-              {files.map((file, fileIndex) => (
-                <File key={fileIndex}>
-                  <FileIcon />
-                  <span title={file}>{file}</span>
-                </File>
-              ))}
-            </FileList>
-          ))}
-        <DropZone>
-          Drop your files here
-          <input ref={inputRef} {...rest} type='file' />
-        </DropZone>
+        {(!!files.length || !!defaultFiles?.length) && (
+          <FileList $separator={!!!defaultFiles?.length}>
+            {defaultFiles?.map((file, fileIndex) => (
+              <File key={fileIndex} as='a' href={file.url} download>
+                <FileIcon />
+                <span title={file.name}>{file.name}</span>
+              </File>
+            ))}
+            {files.map((file, fileIndex) => (
+              <File key={fileIndex}>
+                <FileIcon />
+                <span title={file}>{file}</span>
+              </File>
+            ))}
+          </FileList>
+        )}
+        {!!!defaultFiles?.length && (
+          <DropZone>
+            Drop your files here
+            <input ref={inputRef} {...rest} type='file' />
+          </DropZone>
+        )}
       </Body>
     </Wrapper>
   );

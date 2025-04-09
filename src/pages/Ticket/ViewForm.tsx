@@ -16,6 +16,7 @@ import FormControl from './FormControl';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import TextArea from '@/components/ui/TextArea';
+import Chat from '@/components/Chat';
 import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
@@ -161,6 +162,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.requestTopic }))}
               {...register('requestTopic', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('requestTopic', option.value)}
             />
           }
         />
@@ -180,6 +182,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.browser }))}
               {...register('browser', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('browser', option.value)}
             />
           }
         />
@@ -194,6 +197,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Critical', value: 'Critical' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.requestPriority }))}
               {...register('requestPriority', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('requestPriority', option.value)}
             />
           }
         />
@@ -208,6 +212,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.networkInfo }))}
               {...register('networkInfo', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('networkInfo', option.value)}
             />
           }
         />
@@ -222,6 +227,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Other', value: 'Other' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.OS }))}
               {...register('OS', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('OS', option.value)}
             />
           }
         />
@@ -230,10 +236,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           control={<StyledTextArea rows={6} {...register('impactOnWork', { disabled: !searchParams.has('edit') })} />}
         />
       </FormSection>
-      <iframe
-        src={`${import.meta.env.VITE_URL}/helpdesk/iframe.php?IFRAME=Y&ID=${ticketId}`}
-        style={{ height: 500, border: 'none' }}
-      ></iframe>
+      <Chat id={ticketId} />
       <FileUploader
         subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
         multiple
@@ -255,6 +258,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'No Rush', value: 'No Rush' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.expectedResolution }))}
               {...register('expectedResolution', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('expectedResolution', option.value)}
             />
           }
         />
@@ -268,6 +272,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
                 { name: 'Chat', value: 'Chat' }
               ].map(option => ({ ...option, selected: option.value === defaultValues.preferredContact }))}
               {...register('preferredContact', { disabled: !searchParams.has('edit') })}
+              onSelect={option => setValue('preferredContact', option.value)}
             />
           }
         />

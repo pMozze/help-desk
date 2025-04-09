@@ -27,7 +27,19 @@ const Header: FC = () => {
     <>
       <Title>Request List</Title>
       <Wrapper>
-        <Dropdown label='Type' items={[{ name: 'All', value: 'all' }]} onSelect={item => setType(item.value)} />
+        <Dropdown
+          label='Type'
+          items={[
+            { name: 'All', value: 'all' },
+            { name: 'Requests from company employees', value: 'Requests from company employees' },
+            {
+              name: 'Requests from the technical department for work and incidents',
+              value: 'Requests from the technical department for work and incidents'
+            },
+            { name: 'Customers complaints', value: 'Customers complaints' }
+          ]}
+          onSelect={item => setType(item.value)}
+        />
         <Dropdown
           label='Status'
           items={[

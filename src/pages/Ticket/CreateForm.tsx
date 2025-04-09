@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { format as formatDate, getUnixTime } from 'date-fns';
 
@@ -19,7 +19,6 @@ import Select from '@/components/ui/Select';
 import TextArea from '@/components/ui/TextArea';
 import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
-import Checkbox from '@/components/ui/Checkbox';
 
 import CalendarIcon from '@icons/calendar.svg?react';
 
@@ -64,9 +63,7 @@ const CreateForm: FC = () => {
   );
 
   const { register, handleSubmit, setValue } = useForm<FormData>();
-
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const eventDateCalendarRef = useRef<Calendar | null>(null);
   const eventDateInputRef = useRef<HTMLInputElement>(null);
@@ -155,10 +152,12 @@ const CreateForm: FC = () => {
           control={
             <Select
               options={[
-                { name: 'Group', value: 'Group', selected: true },
-                { name: 'Subgroup', value: 'Subgroup' }
+                { name: 'REQUEST_TOPIC1', value: 'REQUEST_TOPIC1' },
+                { name: 'REQUEST_TOPIC2', value: 'REQUEST_TOPIC2' },
+                { name: 'Other', value: 'Other' }
               ]}
               {...register('requestTopic', { required: false })}
+              onSelect={option => setValue('requestTopic', option.value)}
             />
           }
         />
@@ -179,6 +178,7 @@ const CreateForm: FC = () => {
                 { name: 'Other', value: 'Other' }
               ]}
               {...register('browser', { required: false })}
+              onSelect={option => setValue('browser', option.value)}
             />
           }
         />
@@ -192,6 +192,7 @@ const CreateForm: FC = () => {
                 { name: 'High', value: 'High' }
               ]}
               {...register('requestPriority', { required: false })}
+              onSelect={option => setValue('requestPriority', option.value)}
             />
           }
         />
@@ -206,6 +207,7 @@ const CreateForm: FC = () => {
                 { name: 'Other', value: 'Other' }
               ]}
               {...register('networkInfo', { required: false })}
+              onSelect={option => setValue('networkInfo', option.value)}
             />
           }
         />
@@ -222,6 +224,7 @@ const CreateForm: FC = () => {
                 { name: 'Other', value: 'Other' }
               ]}
               {...register('OS', { required: false })}
+              onSelect={option => setValue('OS', option.value)}
             />
           }
         />
@@ -236,52 +239,36 @@ const CreateForm: FC = () => {
         accept='.png,.jpg,.jpeg,.pdf'
         {...register('screenshots', { required: false })}
       />
-      {searchParams.has('view') || searchParams.has('edit') ? (
-        <FormSection>
-          <FormControl title='Priority' control={<Input type='text' />} />
-          <FormControl
-            title='Answer rating'
-            control={
-              <Select
-                options={[
-                  { name: 'Group 1', value: 'group1', selected: true },
-                  { name: 'Group 2', value: 'group2' }
-                ]}
-              />
-            }
-          />
-          <FormControl title='Close ticket' control={<Checkbox type='checkbox' />} />
-        </FormSection>
-      ) : (
-        <FormSection title='Expected support outcome'>
-          <FormControl
-            title='Expected resolution'
-            control={
-              <Select
-                options={[
-                  { name: 'Immediate', value: 'Immediate', selected: true },
-                  { name: 'Soon', value: 'Soon' },
-                  { name: 'No Rush', value: 'No Rush' }
-                ]}
-                {...register('expectedResolution', { required: false })}
-              />
-            }
-          />
-          <FormControl
-            title='Preferred contact channel'
-            control={
-              <Select
-                options={[
-                  { name: 'Email', value: 'Email', selected: true },
-                  { name: 'Phone', value: 'Phone' },
-                  { name: 'Chat', value: 'Chat' }
-                ]}
-                {...register('preferredContact', { required: false })}
-              />
-            }
-          />
-        </FormSection>
-      )}
+      <FormSection title='Expected support outcome'>
+        <FormControl
+          title='Expected resolution'
+          control={
+            <Select
+              options={[
+                { name: 'Immediate', value: 'Immediate', selected: true },
+                { name: 'Soon', value: 'Soon' },
+                { name: 'No Rush', value: 'No Rush' }
+              ]}
+              {...register('expectedResolution', { required: false })}
+              onSelect={option => setValue('expectedResolution', option.value)}
+            />
+          }
+        />
+        <FormControl
+          title='Preferred contact channel'
+          control={
+            <Select
+              options={[
+                { name: 'Email', value: 'Email', selected: true },
+                { name: 'Phone', value: 'Phone' },
+                { name: 'Chat', value: 'Chat' }
+              ]}
+              {...register('preferredContact', { required: false })}
+              onSelect={option => setValue('preferredContact', option.value)}
+            />
+          }
+        />
+      </FormSection>
       <Buttons>
         <Button type='submit' $type='primary'>
           Send

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 import useSWRMutation from 'swr/mutation';
 import styled from 'styled-components';
 import { match } from 'ts-pattern';

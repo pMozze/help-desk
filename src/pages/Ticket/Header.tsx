@@ -1,14 +1,17 @@
 import { FC } from 'react';
+import { match } from 'ts-pattern';
 import styled from 'styled-components';
 
 import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import Timeline from '@/components/Timeline';
+// import Button from '@/components/ui/Button';
+// import Timeline from '@/components/Timeline';
 
-import StickerIcon from '@icons/sticker.svg?react';
-import MessageIcon from '@icons/message.svg?react';
+// import StickerIcon from '@icons/sticker.svg?react';
+// import MessageIcon from '@icons/message.svg?react';
 
-interface Props {
+import { Ticket } from '@/api/models';
+
+interface Props extends Pick<Ticket, 'responsibleId' | 'status'> {
   className?: string;
 }
 
@@ -28,48 +31,59 @@ const StyledBadge = styled(Badge)`
   background-color: transparent;
 `;
 
-const Wrapper = styled.div`
-  padding: 25px 15px;
-  margin-top: 10px;
-  border-radius: 12px;
-  background-color: #f8f9fa;
-`;
+// const Wrapper = styled.div`
+//   padding: 25px 15px;
+//   margin-top: 10px;
+//   border-radius: 12px;
+//   background-color: #f8f9fa;
+// `;
 
-const Date = styled.div`
-  font-size: 14px;
-  color: #717a81;
-`;
+// const Date = styled.div`
+//   font-size: 14px;
+//   color: #717a81;
+// `;
 
-const Buttons = styled.div`
-  display: flex;
-  column-gap: 5px;
-  margin-top: 35px;
-`;
+// const Buttons = styled.div`
+//   display: flex;
+//   column-gap: 5px;
+//   margin-top: 35px;
+// `;
 
-const StyledButton = styled(Button)`
-  && {
-    padding: 10px 20px;
+// const StyledButton = styled(Button)`
+//   && {
+//     padding: 10px 20px;
 
-    display: flex;
-    align-items: center;
-    column-gap: 5px;
+//     display: flex;
+//     align-items: center;
+//     column-gap: 5px;
 
-    border-radius: 4px;
-  }
-`;
+//     border-radius: 4px;
+//   }
+// `;
 
-const StyledTimeline = styled(Timeline)`
-  margin-top: 15px;
-`;
+// const StyledTimeline = styled(Timeline)`
+//   margin-top: 15px;
+// `;
 
-const Header: FC<Props> = ({ className }) => {
+const Header: FC<Props> = ({ responsibleId, status, className }) => {
   return (
     <div className={className}>
       <Top>
-        <Title>Customize Computer Name</Title>
-        <StyledBadge variant='warning' text='Submitted' />
+        <Title>{responsibleId}</Title>
+        <StyledBadge
+          variant={match<string, 'danger' | 'warning' | 'success'>(status)
+            .with('CREATED', () => 'danger')
+            .with('IN_PROGRESS', () => 'warning')
+            .with('CLOSED', () => 'success')
+            .otherwise(() => 'danger')}
+          text={match(status)
+            .with('CREATED', () => 'Created')
+            .with('IN_PROGRESS', () => 'In Progress')
+            .with('CLOSED', () => 'Closed')
+            .otherwise(state => state)}
+        />
       </Top>
-      <Wrapper>
+      {/* <Wrapper>
         <Date>04 Feb 2025</Date>
         <Buttons>
           <StyledButton $type='bordered' type='button'>
@@ -80,7 +94,7 @@ const Header: FC<Props> = ({ className }) => {
           </StyledButton>
         </Buttons>
         <StyledTimeline steps={['Submitted', 'Approved by HOIT']} progress={45} />
-      </Wrapper>
+      </Wrapper> */}
     </div>
   );
 };

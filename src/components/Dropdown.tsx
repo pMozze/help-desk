@@ -34,6 +34,7 @@ const DropdownButton = styled.button<{ $isActive: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    column-gap: 12px;
 
     background-color: #f3f3f3;
     border-radius: 9999px;
@@ -66,7 +67,7 @@ const DropdownMenu = styled.div`
 
 const DropdownItem = styled.button`
   && {
-    padding-block: 10px;
+    padding: 10px;
     width: 100%;
 
     display: flex;
@@ -75,6 +76,7 @@ const DropdownItem = styled.button`
 
     column-gap: 10px;
     font-size: 14px;
+    text-align: center;
     line-height: 1;
 
     &:hover {
