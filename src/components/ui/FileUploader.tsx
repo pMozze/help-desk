@@ -104,6 +104,10 @@ const File = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
+  &:hover {
+    color: inherit;
+  }
 `;
 
 const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutRef<'input'>>((props, ref) => {
@@ -136,7 +140,7 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
 
   return (
     <Wrapper className={className}>
-      {!!!defaultFiles?.length && (
+      {!!!defaultFiles?.length && !rest.disabled && (
         <>
           <Title>Attach screenshots or documents </Title>
           <Subtitle>{subtitle}</Subtitle>
@@ -144,7 +148,7 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
       )}
       <Body>
         {(!!files.length || !!defaultFiles?.length) && (
-          <FileList $separator={!!!defaultFiles?.length}>
+          <FileList $separator={!!!defaultFiles?.length && !rest.disabled}>
             {defaultFiles?.map((file, fileIndex) => (
               <File key={fileIndex} as='a' href={file.url} download>
                 <FileIcon />
@@ -159,7 +163,7 @@ const FileUploader = forwardRef<HTMLInputElement, Props & ComponentPropsWithoutR
             ))}
           </FileList>
         )}
-        {!!!defaultFiles?.length && (
+        {!!!defaultFiles?.length && !rest.disabled && (
           <DropZone>
             Drop your files here
             <input ref={inputRef} {...rest} type='file' />

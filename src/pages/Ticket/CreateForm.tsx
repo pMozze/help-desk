@@ -152,9 +152,8 @@ const CreateForm: FC = () => {
           control={
             <Select
               options={[
-                { name: 'REQUEST_TOPIC1', value: 'REQUEST_TOPIC1' },
-                { name: 'REQUEST_TOPIC2', value: 'REQUEST_TOPIC2' },
-                { name: 'Other', value: 'Other' }
+                { name: 'Group', value: 'Group', selected: true },
+                { name: 'Subgroup', value: 'Subgroup' }
               ]}
               {...register('requestTopic', { required: false })}
               onSelect={option => setValue('requestTopic', option.value)}
