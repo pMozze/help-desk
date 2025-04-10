@@ -11,7 +11,7 @@ import Badge from '@/components/ui/Badge';
 
 import { Ticket } from '@/api/models';
 
-interface Props extends Pick<Ticket, 'responsibleId' | 'status'> {
+interface Props extends Pick<Ticket, 'responsibleUserName' | 'status'> {
   className?: string;
 }
 
@@ -65,19 +65,21 @@ const StyledBadge = styled(Badge)`
 //   margin-top: 15px;
 // `;
 
-const Header: FC<Props> = ({ responsibleId, status, className }) => {
+const Header: FC<Props> = ({ responsibleUserName, status, className }) => {
   return (
     <div className={className}>
       <Top>
-        <Title>{responsibleId}</Title>
+        <Title>Responsible: {responsibleUserName}</Title>
         <StyledBadge
-          variant={match<string, 'danger' | 'warning' | 'success'>(status)
+          variant={match<string, 'danger' | 'warning' | 'success' | 'info'>(status)
             .with('CREATED', () => 'danger')
-            .with('IN_PROGRESS', () => 'warning')
+            .with('ASSIGNED', () => 'warning')
+            .with('IN_PROGRESS', () => 'info')
             .with('CLOSED', () => 'success')
             .otherwise(() => 'danger')}
           text={match(status)
             .with('CREATED', () => 'Created')
+            .with('ASSIGNED', () => 'Assigned')
             .with('IN_PROGRESS', () => 'In Progress')
             .with('CLOSED', () => 'Closed')
             .otherwise(state => state)}

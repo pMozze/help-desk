@@ -31,7 +31,7 @@ const TicketPage: FC = () => {
     <Page>
       {id ? (
         <>
-          <StyledHeader responsibleId={data!.responsibleId} status={data!.status} />
+          <StyledHeader responsibleUserName={data!.responsibleUserName} status={data!.status} />
           <ViewForm ticketId={Number(id)} defaultValues={{ ...data }} />
         </>
       ) : (

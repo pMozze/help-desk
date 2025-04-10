@@ -18,10 +18,20 @@ const Page = styled.div`
 
 const RequestsPage: FC = () => {
   const { id } = useParams();
-  const { data, isLoading, error } = useSWR<Pick<Ticket, 'name' | 'description' | 'screenshots'>, Error>(
-    id ? `/ticket/${id}/` : null,
-    apiFetcher
-  );
+  const { data, isLoading, error } = useSWR<
+    Pick<
+      Ticket,
+      | 'name'
+      | 'description'
+      | 'screenshots'
+      | 'responsibleGroupId'
+      | 'responsibleUserId'
+      | 'responsibleUserName'
+      | 'service'
+      | 'status'
+    >,
+    Error
+  >(id ? `/ticket/${id}/` : null, apiFetcher);
 
   if (isLoading || error) {
     return;

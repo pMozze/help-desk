@@ -104,8 +104,11 @@ const columns = [
         case 'CREATED':
           return <Badge text='Created' variant='danger' />;
 
+        case 'ASSIGNED':
+          return <Badge text='Assigned' variant='warning' />;
+
         case 'IN_PROGRESS':
-          return <Badge text='In progress' variant='warning' />;
+          return <Badge text='In progress' variant='info' />;
 
         case 'CLOSED':
           return <Badge text='Closed' variant='success' />;

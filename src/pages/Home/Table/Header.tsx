@@ -44,11 +44,12 @@ const Header: FC = () => {
           label='Status'
           items={[
             { name: 'All', value: 'all' },
-            { name: 'Closed', value: 'CLOSED' },
+            { name: 'Created', value: 'CREATED' },
+            { name: 'Assigned', value: 'ASSIGNED' },
             { name: 'In progress', value: 'IN_PROGRESS' },
-            { name: 'Created', value: 'CREATED' }
+            { name: 'Closed', value: 'CLOSED' }
           ]}
-          onSelect={item => setStatus(item.value as 'all' | 'CLOSED' | 'IN_PROGRESS' | 'CREATED')}
+          onSelect={item => setStatus(item.value as 'all' | 'CLOSED' | 'ASSIGNED' | 'IN_PROGRESS' | 'CREATED')}
         />
       </Wrapper>
     </>

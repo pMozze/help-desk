@@ -2,9 +2,9 @@ import { create } from 'zustand';
 
 interface Filters {
   type: 'all' | string;
-  status: 'all' | 'CLOSED' | 'IN_PROGRESS' | 'CREATED';
+  status: 'all' | 'CLOSED' | 'ASSIGNED' | 'IN_PROGRESS' | 'CREATED';
   setType: (type: 'all' | string) => void;
-  setStatus: (status: 'all' | 'CLOSED' | 'IN_PROGRESS' | 'CREATED') => void;
+  setStatus: (status: 'all' | 'CLOSED' | 'ASSIGNED' | 'IN_PROGRESS' | 'CREATED') => void;
 }
 
 export const useTableFiltersStore = create<Filters>(set => ({

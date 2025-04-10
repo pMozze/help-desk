@@ -16,6 +16,7 @@ import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
 interface FormData {
+  createdById: string;
   type: string;
   name: string;
   description: string;
@@ -54,8 +55,10 @@ const CreateForm: FC = () => {
 
   const submitHandler: SubmitHandler<FormData> = data => {
     const formData = new FormData();
+    formData.append('createdById', document.getElementById('help-desk')!.dataset['user-id'] ?? '1');
     formData.append('name', data.name);
     formData.append('type', resolvedType);
+    formData.append('description', data.description);
     formData.append('description', data.description);
 
     for (const file of data.screenshots) {

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-type Variant = 'success' | 'warning' | 'danger';
+type Variant = 'success' | 'warning' | 'danger' | 'info';
 
 interface Props {
   text: string;
@@ -20,6 +20,9 @@ const Wrapper = styled.div<{ $variant: Variant }>`
 
       case 'danger':
         return '#C91414';
+
+      case 'info':
+        return '#2D9CDB';
 
       default:
         return 'currentColor';
