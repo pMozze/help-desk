@@ -1,4 +1,5 @@
 import { FC, useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { format as formatDate, fromUnixTime as dateFromUnixTime } from 'date-fns';
 import {
@@ -51,7 +52,7 @@ const StyledTh = styled.th<{ $canBeSorted?: boolean }>`
   `}
 `;
 
-const StyledTd = styled.td<{ $variant: 'default' | 'bold' }>`
+const StyledTd = styled.td<{ $variant: 'default' | 'bold'; $clickable: boolean }>`
   padding: 10px 20px;
   color: #717a81;
 
@@ -60,6 +61,13 @@ const StyledTd = styled.td<{ $variant: 'default' | 'bold' }>`
     `
     font-weight: 500;
     color: #000;
+  `}
+
+  ${({ $clickable }) =>
+    $clickable &&
+    `
+    cursor: pointer;
+    user-select: none;
   `}
 `;
 
@@ -127,7 +135,9 @@ const columns = [
 ];
 
 const Table: FC<Props> = ({ items }) => {
+  const navigate = useNavigate();
   const { status, type } = useTableFiltersStore();
+  const role = document.getElementById('help-desk')!.dataset.role;
 
   const filtredItems = useMemo(() => {
     let result = items;
@@ -170,7 +180,16 @@ const Table: FC<Props> = ({ items }) => {
         {table.getRowModel().rows.map(row => (
           <tr key={row.id}>
             {row.getVisibleCells().map(cell => (
-              <StyledTd key={cell.id} $variant={cell.column.id === 'title' ? 'bold' : 'default'}>
+              <StyledTd
+                key={cell.id}
+                $variant={cell.column.id === 'title' ? 'bold' : 'default'}
+                $clickable={cell.column.id !== 'menu'}
+                onClick={
+                  cell.column.id !== 'menu'
+                    ? () => navigate(`/ticket/${cell.row.original.id}/${role === 'support' ? '?edit' : ''}`)
+                    : undefined
+                }
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </StyledTd>
             ))}

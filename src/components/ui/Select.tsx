@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ChevronDownIcon from '@icons/chevron-down.svg?react';
 
-type Option = {
+export type Option = {
   name: string;
   value: string;
   selected?: boolean;

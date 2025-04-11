@@ -2,7 +2,7 @@ export interface TicketsItem {
   id: number;
   lastModifiedAt: number;
   type: string;
-  title: string | null;
+  title: string;
   status: string;
 }
 
@@ -30,9 +30,4 @@ export interface Ticket {
   responsibleUserName: string;
   responsibleGroupId: string;
   service: string;
-}
-
-export interface Option {
-  value: string;
-  name: string;
 }

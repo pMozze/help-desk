@@ -2,14 +2,14 @@ import { FC, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { format as formatDate, fromUnixTime, getUnixTime } from 'date-fns';
+
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
+
 import styled from 'styled-components';
 
 import { Calendar } from 'vanilla-calendar-pro';
 import { getDate } from 'vanilla-calendar-pro/utils';
-
-import { apiFetcher } from '@/api/utils';
-import { Option } from '@/api/models';
 
 import FormSection from './FormSection';
 import FormControl from './FormControl';
@@ -21,11 +21,13 @@ import Chat from '@/components/Chat';
 import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
+import { apiFetcher } from '@/api/utils';
+import { Option } from '@/components/ui/Select';
+
 import CalendarIcon from '@icons/calendar.svg?react';
-import useSWR from 'swr';
 
 interface Props {
-  ticketId: number;
+  ticketId: string | number;
   defaultValues: Partial<FormData>;
 }
 
@@ -71,44 +73,32 @@ const Buttons = styled.div`
 `;
 
 const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
-  const [searchParams] = useSearchParams();
   const role = document.getElementById('help-desk')!.dataset.role;
-  const { data: usersData } = useSWR<Option[]>('/users/', apiFetcher);
-  const { data: groupsData } = useSWR<Option[]>('/groups/', apiFetcher);
+  const [searchParams] = useSearchParams();
+
+  const { data: usersData, isValidating: isUsersValidating } = useSWR<Option[]>('/users/', apiFetcher);
+  const { data: groupsData, isValidating: isGroupsValidating } = useSWR<Option[]>('/groups/', apiFetcher);
+
+  const { trigger } = useSWRMutation(
+    `/ticket/${ticketId}/`,
+    (endpoint: string, options: { arg: Partial<Omit<FormData, 'screenshots'>> }) =>
+      apiFetcher<Partial<Omit<FormData, 'screenshots'>>>(endpoint, 'PATCH', options.arg)
+  );
 
   const { register, setValue, handleSubmit } = useForm<FormData>({
     defaultValues
   });
-
-  const userOptions =
-    usersData?.map(option => ({
-      name: option.name,
-      value: option.value,
-      selected: option.value == defaultValues.responsibleUserId
-    })) ?? [];
-  const groupOptions =
-    groupsData?.map(option => ({
-      name: option.name,
-      value: option.value,
-      selected: option.value == defaultValues.responsibleGroupId
-    })) ?? [];
-
-  const { trigger } = useSWRMutation(
-    `/ticket/${ticketId}/`,
-    (endpoint, options: { arg: Omit<FormData, 'screenshots'> }) =>
-      apiFetcher<Omit<FormData, 'screenshots'>>(endpoint, 'PATCH', options.arg)
-  );
 
   const navigate = useNavigate();
   const eventDateCalendarRef = useRef<Calendar | null>(null);
   const eventDateInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (eventDateCalendarRef.current) {
+    if (eventDateCalendarRef.current || !eventDateInputRef.current) {
       return;
     }
 
-    const eventDateInput = eventDateInputRef.current!;
+    const eventDateInput = eventDateInputRef.current;
     eventDateInput.addEventListener('keydown', event => event.preventDefault());
 
     eventDateCalendarRef.current = new Calendar(eventDateInput, {
@@ -136,6 +126,10 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
     trigger(newData);
     navigate('/');
   };
+
+  if (!usersData || isUsersValidating || !groupsData || isGroupsValidating) {
+    return;
+  }
 
   return (
     <Wrapper onSubmit={handleSubmit(submitHandler)}>
@@ -255,17 +249,23 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
         />
         <FormControl
           title='Impact on work'
-          control={<StyledTextArea rows={6} {...register('impactOnWork', { disabled: !searchParams.has('edit') })} />}
+          control={
+            <StyledTextArea
+              cols={100}
+              rows={6}
+              {...register('impactOnWork', { disabled: !searchParams.has('edit') })}
+            />
+          }
         />
       </FormSection>
       <Chat id={ticketId} />
-      {defaultValues.screenshots && defaultValues.screenshots.length > 0 && (
+      {!!defaultValues.screenshots?.length && (
         <FileUploader
           subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
           multiple
           accept='.png,.jpg,.jpeg,.pdf'
           disabled
-          defaultFiles={defaultValues.screenshots?.map(file => ({
+          defaultFiles={defaultValues.screenshots.map(file => ({
             name: file.name,
             url: import.meta.env.VITE_URL + file.url
           }))}
@@ -307,7 +307,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
             title='Responsible group'
             control={
               <Select
-                options={groupOptions}
+                options={groupsData.map(option => ({
+                  name: option.name,
+                  value: option.value,
+                  selected: option.value == defaultValues.responsibleGroupId
+                }))}
                 {...register('responsibleGroupId', { disabled: !searchParams.has('edit') })}
                 onSelect={option => setValue('responsibleGroupId', option.value)}
               />
@@ -317,7 +321,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
             title='Responsible user'
             control={
               <Select
-                options={userOptions}
+                options={usersData.map(option => ({
+                  name: option.name,
+                  value: option.value,
+                  selected: option.value == defaultValues.responsibleUserId
+                }))}
                 {...register('responsibleUserId', { disabled: !searchParams.has('edit') })}
                 onSelect={option => setValue('responsibleUserId', option.value)}
               />
@@ -361,6 +369,11 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
         {searchParams.has('edit') && (
           <Button type='submit' $type='primary'>
             Apply
+          </Button>
+        )}
+        {role === 'user' && defaultValues.status === 'CLOSED' && (
+          <Button type='button' $type='black' onClick={() => trigger({ status: 'IN_PROGRESS' })}>
+            Reopen
           </Button>
         )}
         <Button type='button' $type='bordered' onClick={() => navigate('/')}>

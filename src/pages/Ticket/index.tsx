@@ -21,18 +21,14 @@ const StyledHeader = styled(Header)`
 
 const TicketPage: FC = () => {
   const { id } = useParams();
-  const { data, isLoading, error } = useSWR<Ticket, Error>(id ? `/ticket/${id}/` : null, apiFetcher);
-
-  if (isLoading || error) {
-    return;
-  }
+  const { data } = useSWR<Ticket, Error>(id ? `/ticket/${id}/` : null, apiFetcher);
 
   return (
     <Page>
-      {id ? (
+      {id && data ? (
         <>
-          <StyledHeader responsibleUserName={data!.responsibleUserName} status={data!.status} />
-          <ViewForm ticketId={Number(id)} defaultValues={{ ...data }} />
+          <StyledHeader responsibleUserName={data!.responsibleUserName} status={data.status} />
+          <ViewForm ticketId={id} defaultValues={{ ...data }} />
         </>
       ) : (
         <CreateForm />

@@ -9,6 +9,7 @@ interface Props {
 const Wrapper = styled.label`
   display: flex;
   column-gap: 45px;
+  width: fit-content;
 `;
 
 const Title = styled.div`
@@ -27,11 +28,15 @@ const Title = styled.div`
   color: #717a81;
 `;
 
+const ControlWrapper = styled.div`
+  min-width: 250px;
+`;
+
 const FormControl: FC<Props> = ({ title, control }) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
-      {control}
+      <ControlWrapper>{control}</ControlWrapper>
     </Wrapper>
   );
 };

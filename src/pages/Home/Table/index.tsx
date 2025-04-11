@@ -15,16 +15,16 @@ const StyledTableWrapper = styled.div`
 `;
 
 const TableWrapper: FC = () => {
-  const { data, isLoading, error } = useSWR<TicketsItem[], Error>('/ticket/', apiFetcher);
+  const { data } = useSWR<TicketsItem[], Error>('/ticket/', apiFetcher);
 
-  if (isLoading || error) {
+  if (!data) {
     return;
   }
 
   return (
     <StyledTableWrapper>
       <Header />
-      <Table items={data!} />
+      <Table items={data} />
       {/* <Footer /> */}
     </StyledTableWrapper>
   );

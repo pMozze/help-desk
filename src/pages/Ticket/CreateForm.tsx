@@ -164,7 +164,7 @@ const CreateForm: FC = () => {
         />
         <FormControl
           title='Description'
-          control={<StyledTextArea rows={4} {...register('description', { required: true })} />}
+          control={<StyledTextArea cols={100} rows={4} {...register('description', { required: true })} />}
         />
         <FormControl title='Device' control={<Input type='text' {...register('device', { required: false })} />} />
         <FormControl
@@ -231,7 +231,7 @@ const CreateForm: FC = () => {
         />
         <FormControl
           title='Impact on work'
-          control={<StyledTextArea rows={6} {...register('impactOnWork', { required: false })} />}
+          control={<StyledTextArea cols={100} rows={6} {...register('impactOnWork', { required: false })} />}
         />
       </FormSection>
       <FileUploader

@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import useSWR from 'swr';
 import styled from 'styled-components';
 
+import Header from './Header';
 import CreateForm from './CreateForm';
 import ViewForm from './ViewForm';
 
@@ -16,9 +17,13 @@ const Page = styled.div`
   background-color: #fff;
 `;
 
+const StyledHeader = styled(Header)`
+  margin-bottom: 15px;
+`;
+
 const RequestsPage: FC = () => {
   const { id } = useParams();
-  const { data, isLoading, error } = useSWR<
+  const { data, isValidating } = useSWR<
     Pick<
       Ticket,
       | 'name'
@@ -33,11 +38,18 @@ const RequestsPage: FC = () => {
     Error
   >(id ? `/ticket/${id}/` : null, apiFetcher);
 
-  if (isLoading || error) {
-    return;
-  }
-
-  return <Page>{id === undefined ? <CreateForm /> : <ViewForm requestId={Number(id)} defaultValues={data!} />}</Page>;
+  return (
+    <Page>
+      {id && data && !isValidating ? (
+        <>
+          <StyledHeader responsibleUserName={data.responsibleUserName} status={data.status} />
+          <ViewForm requestId={id} defaultValues={data} />
+        </>
+      ) : (
+        <CreateForm />
+      )}
+    </Page>
+  );
 };
 
 export default RequestsPage;

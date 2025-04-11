@@ -3,11 +3,9 @@ import { useSearchParams } from 'react-router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-
-import { apiFetcher } from '@/api/utils';
-import { Option } from '@/api/models';
 
 import FormSection from './FormSection';
 import FormControl from './FormControl';
@@ -19,8 +17,11 @@ import Chat from '@/components/Chat';
 import FileUploader from '@/components/ui/FileUploader';
 import Button from '@/components/ui/Button';
 
+import { apiFetcher } from '@/api/utils';
+import { Option } from '@/components/ui/Select';
+
 interface Props {
-  requestId: number;
+  requestId: string | number;
   defaultValues: FormData;
 }
 
@@ -54,38 +55,30 @@ const Buttons = styled.div`
 `;
 
 const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
+  const role = document.getElementById('help-desk')!.dataset.role;
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const role = document.getElementById('help-desk')!.dataset.role;
-  const { data: usersData } = useSWR<Option[]>('/users/', apiFetcher);
-  const { data: groupsData } = useSWR<Option[]>('/groups/', apiFetcher);
+  const { data: usersData, isValidating: isUsersValidating } = useSWR<Option[]>('/users/', apiFetcher);
+  const { data: groupsData, isValidating: isGroupsValidating } = useSWR<Option[]>('/groups/', apiFetcher);
 
-  const { trigger } = useSWRMutation(`/ticket/${requestId}/`, (endpoint, options: { arg: FormData }) =>
-    apiFetcher<FormData>(endpoint, 'PATCH', options.arg)
+  const { trigger } = useSWRMutation(`/ticket/${requestId}/`, (endpoint: string, options: { arg: Partial<FormData> }) =>
+    apiFetcher<Partial<FormData>>(endpoint, 'PATCH', options.arg)
   );
 
   const { register, setValue, handleSubmit } = useForm<FormData>({
     defaultValues
   });
 
-  const userOptions =
-    usersData?.map(option => ({
-      name: option.name,
-      value: option.value,
-      selected: option.value == defaultValues.responsibleUserId
-    })) ?? [];
-  const groupOptions =
-    groupsData?.map(option => ({
-      name: option.name,
-      value: option.value,
-      selected: option.value == defaultValues.responsibleGroupId
-    })) ?? [];
-
   const submitHandler: SubmitHandler<FormData> = data => {
     trigger(data);
     navigate('/');
   };
+
+  if (!usersData || isUsersValidating || !groupsData || isGroupsValidating) {
+    return;
+  }
 
   return (
     <Wrapper onSubmit={handleSubmit(submitHandler)}>
@@ -96,17 +89,19 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
         />
         <FormControl
           title='Description'
-          control={<StyledTextArea rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />}
+          control={
+            <StyledTextArea cols={100} rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />
+          }
         />
       </FormSection>
       <Chat id={requestId} />
-      {defaultValues.screenshots && defaultValues.screenshots.length > 0 && (
+      {!!defaultValues.screenshots.length && (
         <FileUploader
           subtitle='Please upload file with the following format: png, jpg, jpeg, pdf'
           multiple
           accept='.png,.jpg,.jpeg,.pdf'
           disabled
-          defaultFiles={defaultValues.screenshots?.map(file => ({
+          defaultFiles={defaultValues.screenshots.map(file => ({
             name: file.name,
             url: import.meta.env.VITE_URL + file.url
           }))}
@@ -118,7 +113,11 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
             title='Responsible group'
             control={
               <Select
-                options={groupOptions}
+                options={groupsData.map(option => ({
+                  name: option.name,
+                  value: option.value,
+                  selected: option.value == defaultValues.responsibleGroupId
+                }))}
                 {...register('responsibleGroupId', { disabled: !searchParams.has('edit') })}
                 onSelect={option => setValue('responsibleGroupId', option.value)}
               />
@@ -128,7 +127,11 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
             title='Responsible user'
             control={
               <Select
-                options={userOptions}
+                options={usersData.map(option => ({
+                  name: option.name,
+                  value: option.value,
+                  selected: option.value == defaultValues.responsibleUserId
+                }))}
                 {...register('responsibleUserId', { disabled: !searchParams.has('edit') })}
                 onSelect={option => setValue('responsibleUserId', option.value)}
               />
@@ -172,6 +175,11 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
         {searchParams.has('edit') && (
           <Button type='submit' $type='primary'>
             Apply
+          </Button>
+        )}
+        {role === 'user' && defaultValues.status === 'CLOSED' && (
+          <Button type='button' $type='black' onClick={() => trigger({ status: 'IN_PROGRESS' })}>
+            Reopen
           </Button>
         )}
         <Button type='button' $type='bordered' onClick={() => navigate('/')}>
