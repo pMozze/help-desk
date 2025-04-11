@@ -55,7 +55,7 @@ const CreateForm: FC = () => {
 
   const submitHandler: SubmitHandler<FormData> = data => {
     const formData = new FormData();
-    formData.append('createdById', document.getElementById('help-desk')!.dataset['user-id'] ?? '1');
+    formData.append('createdById', document.getElementById('help-desk')!.dataset.userId ?? '0');
     formData.append('name', data.name);
     formData.append('type', resolvedType);
     formData.append('description', data.description);

@@ -99,7 +99,7 @@ const CreateForm: FC = () => {
 
   const submitHandler: SubmitHandler<FormData> = data => {
     const formData = new FormData();
-    formData.append('createdById', document.getElementById('help-desk')!.dataset['user-id'] ?? '1');
+    formData.append('createdById', document.getElementById('help-desk')!.dataset.userId ?? '0');
     formData.append('type', 'Customers complaints');
     formData.append('OS', data.OS);
     formData.append('browser', data.browser);
