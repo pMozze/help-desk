@@ -6,6 +6,7 @@ import Layout from './pages/Layout';
 import Home from './pages/Home';
 import TicketPage from './pages/Ticket';
 import RequestsPage from './pages/Requests';
+import WikiPage from './pages/Wiki';
 
 createRoot(document.getElementById('help-desk')!).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('help-desk')!).render(
           <Route path='/ticket/:id' Component={TicketPage} />
           <Route path='/requests/create' Component={RequestsPage} />
           <Route path='/requests/:id' Component={RequestsPage} />
+          <Route path='/wiki' Component={WikiPage} />
         </Route>
       </Routes>
     </HashRouter>

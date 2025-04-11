@@ -31,3 +31,11 @@ export interface Ticket {
   responsibleGroupId: string;
   service: string;
 }
+
+export interface WikiPage {
+  name: string;
+  description: string;
+  url: string;
+  createdAt: number;
+  modifiedAt: number;
+}

@@ -27,6 +27,7 @@ const Cards: FC = () => {
         href='/requests/create?type=tech'
       />
       <Card title='Customers complaints' icon={EApplication3Icon} href='/ticket/create' />
+      <Card title='Wiki' icon={EApplication3Icon} href='/wiki' />
     </CardsWrapper>
   );
 };
