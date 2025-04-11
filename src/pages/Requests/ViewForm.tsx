@@ -90,7 +90,7 @@ const ViewForm: FC<Props> = ({ requestId, defaultValues }) => {
         <FormControl
           title='Description'
           control={
-            <StyledTextArea cols={100} rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />
+            <StyledTextArea cols={90} rows={6} {...register('description', { disabled: !searchParams.has('edit') })} />
           }
         />
       </FormSection>

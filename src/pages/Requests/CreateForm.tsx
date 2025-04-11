@@ -75,7 +75,7 @@ const CreateForm: FC = () => {
         <FormControl title='Name' control={<Input type='text' {...register('name', { required: false })} />} />
         <FormControl
           title='Description'
-          control={<StyledTextArea cols={100} rows={6} {...register('description', { required: true })} />}
+          control={<StyledTextArea cols={90} rows={6} {...register('description', { required: true })} />}
         />
       </FormSection>
       <FileUploader

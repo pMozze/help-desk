@@ -251,7 +251,7 @@ const ViewForm: FC<Props> = ({ ticketId, defaultValues }) => {
           title='Impact on work'
           control={
             <StyledTextArea
-              cols={100}
+              cols={90}
               rows={6}
               {...register('impactOnWork', { disabled: !searchParams.has('edit') })}
             />
